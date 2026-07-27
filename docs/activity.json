@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T15:31:32.113Z",
+  "generatedAt": "2026-07-27T15:32:09.115Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -113,7 +113,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-27T15:31:15Z",
+      "lastActivity": "2026-07-27T15:31:56Z",
       "recentCommits": [
         {
           "message": "fix: 추적되지 않은 activity.json이 커밋되지 않던 문제 수정",
@@ -126,7 +126,7 @@
       ],
       "checklist": {
         "1": [
-          0,
+          1,
           5
         ],
         "2": [
@@ -140,7 +140,7 @@
       },
       "issueUrl": "https://github.com/flyai-kfc/fly-ai-playground/issues/1",
       "checklistItems": {
-        "레포를 클론하고 Claude로 열었다": false,
+        "레포를 클론하고 Claude로 열었다": true,
         "만들 것을 에이전트와 인터뷰해서 `SPEC.md`로 정리했다": false,
         "내 브랜치를 만들고 첫 커밋을 push했다": false,
         "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": false,
