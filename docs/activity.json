@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T15:34:27.440Z",
+  "generatedAt": "2026-07-27T16:04:16.150Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -102,8 +102,8 @@
     "GunderGie": {
       "name": "김동건",
       "role": "guide",
-      "commits": 2,
-      "mergeCommits": 0,
+      "commits": 4,
+      "mergeCommits": 1,
       "prsOpened": 0,
       "prsMerged": 0,
       "reviewsGiven": 0,
@@ -113,8 +113,16 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-27T15:34:15Z",
+      "lastActivity": "2026-07-27T16:03:58Z",
       "recentCommits": [
+        {
+          "message": "Merge branch 'main' of https://github.com/flyai-kfc/fly-ai-playground",
+          "date": "2026-07-27T16:03:58Z"
+        },
+        {
+          "message": "fix: 가이드 문서 404 해결 및 문서 업데이트",
+          "date": "2026-07-27T16:02:56Z"
+        },
         {
           "message": "fix: 추적되지 않은 activity.json이 커밋되지 않던 문제 수정",
           "date": "2026-07-27T15:25:18Z"
