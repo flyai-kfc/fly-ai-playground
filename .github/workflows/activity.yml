@@ -1,0 +1,252 @@
+name: 진도 스냅샷
+
+# 팀원들의 활동을 모아 docs/activity.json으로 저장합니다.
+# 대시보드와 점검 스크립트는 이 파일 하나만 읽으면 되므로
+# GitHub API 요청 한도에 걸릴 일이 없습니다.
+
+on:
+  push:
+    branches-ignore: []
+    paths-ignore:
+      - 'docs/activity.json'
+  pull_request:
+    types: [opened, closed, reopened, edited, synchronize]
+  pull_request_review:
+    types: [submitted]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, edited, closed, reopened]
+  issue_comment:
+    types: [created, edited]
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+  issues: read
+
+concurrency:
+  group: activity-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: 활동 수집
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const owner = context.repo.owner, repo = context.repo.repo;
+
+            // --- 팀원 설정은 docs/index.html의 course-config 한 곳에서만 읽는다 ---
+            const html = fs.readFileSync('docs/index.html', 'utf8');
+            const m = html.match(/id="course-config"[^>]*>([\s\S]*?)<\/script>/);
+            if (!m) { core.setFailed('docs/index.html에서 course-config를 찾지 못했습니다.'); return; }
+            const cfg = JSON.parse(m[1]);
+            const members = cfg.members || [];
+
+            const alias = {};
+            for (const mem of members) {
+              for (const k of [mem.login, mem.name, ...(mem.aliases || [])]) {
+                if (k) alias[String(k).toLowerCase()] = mem.login;
+              }
+            }
+            const who = (...keys) => {
+              for (let k of keys) {
+                if (!k) continue;
+                k = String(k).toLowerCase();
+                if (k.includes('@')) k = k.split('@')[0];
+                if (alias[k]) return alias[k];
+              }
+              return null;
+            };
+            const isBot = (login) => !login || /\[bot\]$/.test(login) || login === 'github-actions';
+
+            const people = {};
+            for (const mem of members) {
+              people[mem.login] = {
+                name: mem.name, role: mem.role || 'learner',
+                commits: 0, mergeCommits: 0, prsOpened: 0, prsMerged: 0,
+                reviewsGiven: 0, issueComments: 0, issuesOpened: 0,
+                claudeMdCommits: 0, skillCommits: 0, hasSpec: false,
+                prBodyQuality: 0, lastActivity: null, recentCommits: [],
+                checklist: { '1': [0,0], '2': [0,0], '3': [0,0] }, issueUrl: null
+              };
+            }
+            const touch = (login, iso) => {
+              if (!iso) return;
+              const p = people[login];
+              if (!p.lastActivity || iso > p.lastActivity) p.lastActivity = iso;
+            };
+
+            const all = async (fn, params) => paginate(fn, params);
+            const paginate = (fn, params) => github.paginate(fn, { owner, repo, per_page: 100, ...params });
+
+            // --- 커밋 (모든 브랜치) ---
+            const branches = await paginate(github.rest.repos.listBranches, {});
+            const seen = new Set();
+            for (const b of branches) {
+              let commits = [];
+              try { commits = await paginate(github.rest.repos.listCommits, { sha: b.name }); }
+              catch (e) { core.info(`브랜치 ${b.name} 건너뜀: ${e.message}`); continue; }
+              for (const c of commits) {
+                if (seen.has(c.sha)) continue;
+                seen.add(c.sha);
+                const login = c.author && c.author.login;
+                if (isBot(login)) continue;
+                const w = who(login, c.commit.author && c.commit.author.name, c.commit.author && c.commit.author.email);
+                if (!w) continue;
+                people[w].commits++;
+                // PR 머지 커밋은 GitHub이 대신 만드는 것이므로 충돌 해결 증거로 치지 않는다.
+                if ((c.parents || []).length > 1 && !/^Merge pull request/.test(c.commit.message)) {
+                  people[w].mergeCommits++;
+                }
+                touch(w, c.commit.author.date);
+                if (people[w].recentCommits.length < 5) {
+                  people[w].recentCommits.push({
+                    message: c.commit.message.split('\n')[0].slice(0, 90),
+                    date: c.commit.author.date
+                  });
+                }
+              }
+            }
+
+            // --- 하네스 기여: CLAUDE.md / .claude 경로를 건드린 커밋 ---
+            for (const [path, key] of [['CLAUDE.md', 'claudeMdCommits'], ['.claude', 'skillCommits']]) {
+              let cs = [];
+              try { cs = await paginate(github.rest.repos.listCommits, { path }); } catch (e) { cs = []; }
+              for (const c of cs) {
+                const login = c.author && c.author.login;
+                if (isBot(login)) continue;
+                const w = who(login, c.commit.author && c.commit.author.name);
+                if (w) people[w][key]++;
+              }
+            }
+
+            // --- SPEC.md 존재 여부 ---
+            try {
+              const tree = await github.rest.git.getTree({ owner, repo, tree_sha: 'main', recursive: '1' });
+              for (const n of tree.data.tree) {
+                const mm = n.path.match(/^sandbox\/([^/]+)\//);
+                if (!mm) continue;
+                const w = who(mm[1]);
+                if (w && /\/SPEC\.md$/i.test(n.path)) people[w].hasSpec = true;
+              }
+            } catch (e) { core.info('트리 조회 실패: ' + e.message); }
+
+            // --- PR ---
+            const pulls = await paginate(github.rest.pulls.list, { state: 'all' });
+            const prAuthor = {};
+            for (const p of pulls) {
+              const login = p.user && p.user.login;
+              prAuthor[p.number] = login;
+              const w = who(login);
+              if (!w) continue;
+              people[w].prsOpened++;
+              if (p.merged_at) people[w].prsMerged++;
+              touch(w, p.updated_at);
+              const body = p.body || '';
+              const dense = body.replace(/\s/g, '').length;
+              let q = 0;
+              if (/왜|이유|의도|because/.test(body) && dense > 120) q = 1;
+              if (q === 1 && /배운|다음엔|느낀|learn/.test(body)) q = 2;
+              if (q > people[w].prBodyQuality) people[w].prBodyQuality = q;
+            }
+
+            // --- 리뷰: 남의 PR에 남긴 것만 ---
+            for (const p of pulls) {
+              let revs = [], cmts = [];
+              try { revs = await paginate(github.rest.pulls.listReviews, { pull_number: p.number }); } catch (e) {}
+              try { cmts = await paginate(github.rest.pulls.listReviewComments, { pull_number: p.number }); } catch (e) {}
+              for (const r of [...revs, ...cmts]) {
+                const login = r.user && r.user.login;
+                if (isBot(login)) continue;
+                const w = who(login);
+                if (!w || w === who(prAuthor[p.number])) continue;
+                if (r.state === 'PENDING') continue;
+                people[w].reviewsGiven++;
+                touch(w, r.submitted_at || r.created_at);
+              }
+            }
+
+            // --- 이슈 & 코멘트, 진도 체크리스트 ---
+            const parseChecklist = (body) => {
+              const out = { '1': [0,0], '2': [0,0], '3': [0,0] }, items = {};
+              let day = 0;
+              for (const line of String(body || '').split(/\r?\n/)) {
+                const h = line.match(/^#{2,4}\s*Day\s*([123])/i);
+                if (h) { day = h[1]; continue; }
+                const c = line.match(/^\s*[-*]\s*\[( |x|X)\]\s*(.+)$/);
+                if (c && day) {
+                  out[day][1]++;
+                  if (c[1].toLowerCase() === 'x') out[day][0]++;
+                  items[c[2].trim()] = c[1].toLowerCase() === 'x';
+                }
+              }
+              return { days: out, items };
+            };
+
+            const issues = await paginate(github.rest.issues.listForRepo, { state: 'all' });
+            for (const it of issues) {
+              const login = it.user && it.user.login;
+              const w = who(login);
+              if (w && !isBot(login)) {
+                if (!it.pull_request) people[w].issuesOpened++;
+                touch(w, it.updated_at);
+              }
+              if (it.pull_request) continue;
+              const tm = (it.title || '').match(/\[진도\]\s*(\S+)/);
+              if (tm) {
+                const target = who(tm[1]);
+                if (target) {
+                  const parsed = parseChecklist(it.body);
+                  people[target].checklist = parsed.days;
+                  people[target].checklistItems = parsed.items;
+                  people[target].issueUrl = it.html_url;
+                }
+              }
+            }
+
+            const comments = await paginate(github.rest.issues.listCommentsForRepo, {});
+            for (const c of comments) {
+              const login = c.user && c.user.login;
+              if (isBot(login)) continue;
+              const w = who(login);
+              if (!w) continue;
+              people[w].issueComments++;
+              touch(w, c.created_at);
+              const n = Number((c.issue_url || '').split('/').pop());
+              if (prAuthor[n] && who(prAuthor[n]) !== w) people[w].reviewsGiven++;
+            }
+
+            const out = {
+              generatedAt: new Date().toISOString(),
+              repo: `${owner}/${repo}`,
+              startDate: cfg.startDate || null,
+              people
+            };
+            fs.mkdirSync('docs', { recursive: true });
+            fs.writeFileSync('docs/activity.json', JSON.stringify(out, null, 2) + '\n');
+            core.info('스냅샷 작성 완료: ' + Object.keys(people).length + '명');
+
+      - name: 변경사항 커밋
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet docs/activity.json; then
+            echo "변경 없음"
+          else
+            git add docs/activity.json
+            git commit -m "chore: 진도 스냅샷 갱신 [skip ci]"
+            git push
+          fi
