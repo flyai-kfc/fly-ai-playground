@@ -1,0 +1,192 @@
+{
+  "generatedAt": "2026-07-27T15:34:27.440Z",
+  "repo": "flyai-kfc/fly-ai-playground",
+  "startDate": "2026-07-28",
+  "people": {
+    "nocked115": {
+      "name": "이수현",
+      "role": "learner",
+      "commits": 0,
+      "mergeCommits": 0,
+      "prsOpened": 0,
+      "prsMerged": 0,
+      "reviewsGiven": 0,
+      "issueComments": 0,
+      "issuesOpened": 0,
+      "claudeMdCommits": 0,
+      "skillCommits": 0,
+      "hasSpec": false,
+      "prBodyQuality": 0,
+      "lastActivity": null,
+      "recentCommits": [],
+      "checklist": {
+        "1": [
+          0,
+          0
+        ],
+        "2": [
+          0,
+          0
+        ],
+        "3": [
+          0,
+          0
+        ]
+      },
+      "issueUrl": null
+    },
+    "hyeineom12": {
+      "name": "엄혜인",
+      "role": "learner",
+      "commits": 0,
+      "mergeCommits": 0,
+      "prsOpened": 0,
+      "prsMerged": 0,
+      "reviewsGiven": 0,
+      "issueComments": 0,
+      "issuesOpened": 0,
+      "claudeMdCommits": 0,
+      "skillCommits": 0,
+      "hasSpec": false,
+      "prBodyQuality": 0,
+      "lastActivity": null,
+      "recentCommits": [],
+      "checklist": {
+        "1": [
+          0,
+          0
+        ],
+        "2": [
+          0,
+          0
+        ],
+        "3": [
+          0,
+          0
+        ]
+      },
+      "issueUrl": null
+    },
+    "hhseo9519": {
+      "name": "서현호",
+      "role": "learner",
+      "commits": 0,
+      "mergeCommits": 0,
+      "prsOpened": 0,
+      "prsMerged": 0,
+      "reviewsGiven": 0,
+      "issueComments": 0,
+      "issuesOpened": 0,
+      "claudeMdCommits": 0,
+      "skillCommits": 0,
+      "hasSpec": false,
+      "prBodyQuality": 0,
+      "lastActivity": null,
+      "recentCommits": [],
+      "checklist": {
+        "1": [
+          0,
+          0
+        ],
+        "2": [
+          0,
+          0
+        ],
+        "3": [
+          0,
+          0
+        ]
+      },
+      "issueUrl": null
+    },
+    "GunderGie": {
+      "name": "김동건",
+      "role": "guide",
+      "commits": 2,
+      "mergeCommits": 0,
+      "prsOpened": 0,
+      "prsMerged": 0,
+      "reviewsGiven": 0,
+      "issueComments": 0,
+      "issuesOpened": 1,
+      "claudeMdCommits": 1,
+      "skillCommits": 0,
+      "hasSpec": false,
+      "prBodyQuality": 0,
+      "lastActivity": "2026-07-27T15:34:15Z",
+      "recentCommits": [
+        {
+          "message": "fix: 추적되지 않은 activity.json이 커밋되지 않던 문제 수정",
+          "date": "2026-07-27T15:25:18Z"
+        },
+        {
+          "message": "chore: 연습 레포 초기 셋업",
+          "date": "2026-07-27T15:03:12Z"
+        }
+      ],
+      "checklist": {
+        "1": [
+          1,
+          5
+        ],
+        "2": [
+          0,
+          5
+        ],
+        "3": [
+          0,
+          4
+        ]
+      },
+      "issueUrl": "https://github.com/flyai-kfc/fly-ai-playground/issues/1",
+      "checklistItems": {
+        "레포를 클론하고 Claude로 열었다": true,
+        "만들 것을 에이전트와 인터뷰해서 `SPEC.md`로 정리했다": false,
+        "내 브랜치를 만들고 첫 커밋을 push했다": false,
+        "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": false,
+        "PR을 올렸고 머지됐다": false,
+        "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": false,
+        "merge conflict를 직접 해결해봤다": false,
+        "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": false,
+        "내 PR에 달린 리뷰를 반영해서 다시 push했다": false,
+        "설계 이견을 이슈나 PR 코멘트에 글로 정리해봤다": false,
+        "`CLAUDE.md`에 규칙을 한 줄 추가하고, 전/후 에이전트 행동 차이를 관찰했다": false,
+        "팀 공용 스킬을 하나 만들어 커밋했다": false,
+        "서브에이전트를 써보거나 테스트로 자가 검증 루프를 만들어봤다": false,
+        "회고를 작성했다": false
+      }
+    },
+    "mintoly31": {
+      "name": "정민",
+      "role": "guide",
+      "commits": 0,
+      "mergeCommits": 0,
+      "prsOpened": 0,
+      "prsMerged": 0,
+      "reviewsGiven": 0,
+      "issueComments": 0,
+      "issuesOpened": 0,
+      "claudeMdCommits": 0,
+      "skillCommits": 0,
+      "hasSpec": false,
+      "prBodyQuality": 0,
+      "lastActivity": null,
+      "recentCommits": [],
+      "checklist": {
+        "1": [
+          0,
+          0
+        ],
+        "2": [
+          0,
+          0
+        ],
+        "3": [
+          0,
+          0
+        ]
+      },
+      "issueUrl": null
+    }
+  }
+}
