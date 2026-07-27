@@ -36,14 +36,19 @@ jobs:
   snapshot:
     runs-on: ubuntu-latest
     steps:
+      # SNAPSHOT_TOKEN 시크릿이 있으면 그걸 쓰고, 없으면 기본 GITHUB_TOKEN을 쓴다.
+      # 조직 정책이 GITHUB_TOKEN을 읽기 전용으로 잠근 경우 SNAPSHOT_TOKEN(PAT)으로 우회한다.
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.SNAPSHOT_TOKEN || github.token }}
+          persist-credentials: true
 
       - name: 활동 수집
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.SNAPSHOT_TOKEN || github.token }}
           script: |
             const fs = require('fs');
             const owner = context.repo.owner, repo = context.repo.repo;
@@ -237,16 +242,38 @@ jobs:
             };
             fs.mkdirSync('docs', { recursive: true });
             fs.writeFileSync('docs/activity.json', JSON.stringify(out, null, 2) + '\n');
-            core.info('스냅샷 작성 완료: ' + Object.keys(people).length + '명');
+            const active = Object.values(people).filter(p => p.commits || p.prsOpened || p.reviewsGiven).length;
+            core.info(`스냅샷 작성 완료 — 팀원 ${Object.keys(people).length}명 중 활동 있는 사람 ${active}명`);
+            core.summary.addHeading('진도 스냅샷', 3);
+            core.summary.addTable([
+              [{data: '팀원', header: true}, {data: '커밋', header: true},
+               {data: 'PR(머지)', header: true}, {data: '리뷰', header: true}],
+              ...Object.entries(people).map(([login, p]) =>
+                [`${p.name} (${login})`, String(p.commits),
+                 `${p.prsOpened}(${p.prsMerged})`, String(p.reviewsGiven)])
+            ]);
+            await core.summary.write();
 
       - name: 변경사항 커밋
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet docs/activity.json; then
-            echo "변경 없음"
+          # git add를 먼저 해야 한다. 추적되지 않은 새 파일은 git diff가 보지 못해
+          # 첫 실행에서 영원히 "변경 없음"으로 빠지기 때문이다.
+          git add -f docs/activity.json
+          if git diff --cached --quiet -- docs/activity.json; then
+            echo "변경 없음 — 스냅샷 내용이 직전과 동일합니다."
+            exit 0
+          fi
+          git commit -m "chore: 진도 스냅샷 갱신 [skip ci]"
+          if git push; then
+            echo "스냅샷 갱신 완료"
           else
-            git add docs/activity.json
-            git commit -m "chore: 진도 스냅샷 갱신 [skip ci]"
-            git push
+            echo "::error::스냅샷을 push하지 못했습니다 (쓰기 권한 없음)."
+            echo "::error::해결 1 — 조직 설정에서 허용: https://github.com/organizations/${{ github.repository_owner }}/settings/actions"
+            echo "::error::  Workflow permissions → 'Read and write permissions' 선택 후 Save"
+            echo "::error::해결 2 — PAT 우회: Contents:Read and write 권한의 fine-grained PAT를 만들어"
+            echo "::error::  레포 Settings → Secrets and variables → Actions에 SNAPSHOT_TOKEN 이름으로 등록"
+            echo "::error::둘 다 불가능하면 이 워크플로우를 꺼도 됩니다. 진도판이 GitHub API를 직접 읽는 방식으로 자동 전환됩니다."
+            exit 1
           fi
