@@ -65,25 +65,73 @@ git push -u origin main
 
 ---
 
-## 4. Actions 쓰기 권한을 켭니다
+## 4. Actions 쓰기 권한 (셋 중 하나만 하면 됩니다)
 
-**Settings → Actions → General → Workflow permissions → "Read and write permissions"** 선택 후 Save.
+진도 스냅샷 워크플로우가 `docs/activity.json`을 커밋해야 해서 쓰기 권한이 필요합니다.
 
-진도 스냅샷 워크플로우가 `docs/activity.json`을 커밋해야 하므로 필요합니다.
-그다음 **Actions 탭 → "진도 스냅샷" → Run workflow**로 한 번 수동 실행해서 정상 동작을 확인하세요.
+### 방법 A — 조직 설정에서 허용 (권장)
 
-> 이 워크플로우가 진도판의 심장입니다. 30분마다, 그리고 PR·이슈·리뷰가 생길 때마다 자동으로 돌면서
-> 팀원별 활동을 `docs/activity.json`에 모아둡니다. 대시보드는 이 파일 하나만 읽으므로
-> **GitHub API 요청 한도에 걸릴 일이 없습니다.**
+**레포 설정이 아니라 조직 설정입니다.** 조직 기본값이 읽기 전용이면 레포 화면의 라디오 버튼이
+회색으로 비활성화되어 아무리 눌러도 안 바뀝니다. GitHub 문서에 명시된 동작입니다 —
+*"조직 기본값을 제한적으로 두면 조직 내 저장소에도 같은 옵션이 선택되고 허용적인 옵션은 비활성화된다."*
+
+→ https://github.com/organizations/flyai-kfc/settings/actions
+→ **Workflow permissions → "Read and write permissions"** 선택 → Save
+
+그다음 레포 Settings → Actions → General에서 같은 옵션이 선택 가능해집니다.
+
+### 방법 B — PAT로 우회 (조직 정책을 못 바꿀 때)
+
+조직 소유자가 아니거나 정책이 상위에서 강제되는 경우입니다. 워크플로우가 `SNAPSHOT_TOKEN`
+시크릿이 있으면 그걸 먼저 쓰도록 되어 있습니다. PAT는 조직의 GITHUB_TOKEN 정책과 무관합니다.
+
+1. https://github.com/settings/personal-access-tokens/new 에서 **fine-grained PAT** 생성
+   - Resource owner: `flyai-kfc`
+   - Repository access: **Only select repositories** → `fly-ai-playground`
+   - Repository permissions: **Contents → Read and write** (이것 하나면 충분)
+   - 만료일은 코스 기간보다 조금 길게 (예: 30일)
+2. 레포 **Settings → Secrets and variables → Actions → New repository secret**
+   - Name: `SNAPSHOT_TOKEN`
+   - Secret: 방금 만든 토큰
+3. Actions 탭에서 워크플로우를 다시 실행
+
+### 방법 C — 그냥 건너뛰기
+
+둘 다 안 되면 **워크플로우를 꺼도 됩니다.** 진도판이 스냅샷이 없는 걸 감지하면
+GitHub API를 직접 읽는 모드로 자동 전환됩니다. 기능은 똑같습니다.
+
+다만 인증 없는 조회는 **IP당 시간당 60회** 제한이 있고, 한 번 열 때 8회를 씁니다.
+같은 사무실 WiFi를 쓰면 5명이 IP 하나를 공유하니 빠듯할 수 있어서, 이 모드에서는
+자동 새로고침 간격이 20분으로 늘어나고 탭이 안 보일 때는 아예 쉽니다.
+한도에 걸리면 안내와 함께 토큰 입력칸이 나타납니다(브라우저 메모리에만 두고 저장하지 않습니다).
+
+---
+
+권한이 준비되면 **Actions 탭 → "진도 스냅샷" → Run workflow**로 한 번 수동 실행하세요.
+성공하면 `docs/activity.json`이 커밋되고 진도판에 팀원 카드가 뜹니다.
+
+> 이 워크플로우가 진도판의 심장입니다. 30분마다, 그리고 PR·이슈·리뷰가 생길 때마다 돌면서
+> 팀원별 활동을 모아둡니다. 대시보드는 이 파일 하나만 읽으므로 조회 한도 걱정이 없습니다.
+> push에 실패하면 워크플로우 로그에 위 해결책이 그대로 출력됩니다.
 
 ---
 
 ## 5. 팀원을 초대하고 진도 이슈를 만듭니다
 
-- **Settings → Collaborators**에서 팀원 4명 초대 (Write 권한).
-- 팀원 1인당 진도 이슈를 하나씩 만듭니다: **Issues → New issue → "진도 체크리스트"** 템플릿 선택.
-  제목을 `[진도] <그사람의깃허브아이디>` 로 정확히 맞춰야 대시보드가 인식합니다.
-  (본인이 직접 만들게 해도 좋습니다 — 그것도 GitHub 연습입니다.)
+조직이니까 **팀(Team)으로 한 번에 초대하는 게 낫습니다.** 나중에 본 프로덕션 레포가
+생기면 팀에 레포만 추가하면 되고, 사람이 바뀌어도 한 곳만 고치면 됩니다.
+
+1. https://github.com/orgs/flyai-kfc/new-team 에서 팀 생성 (예: `fly-ai`)
+2. 팀 페이지 → **Add a member**로 4명 초대 — 초대받은 사람이 **조직 초대를 먼저 수락**해야 팀에 들어옵니다
+3. 레포 **Settings → Collaborators and teams → Add teams** → `fly-ai` → 권한 **Write**
+
+개인별로 붙이려면 같은 화면의 **Add people**를 쓰면 됩니다. 어느 쪽이든 동작은 같습니다.
+
+그다음 **학습자 3명분의 진도 이슈**를 만듭니다. Issues → New issue → "진도 체크리스트" 템플릿 선택.
+
+- 제목을 `[진도] nocked115` 처럼 **정확히** 맞춰야 대시보드가 체크박스를 읽습니다.
+- 본인이 직접 만들게 해도 좋습니다 — 그것도 GitHub 연습입니다.
+- 가이드 2명은 실습 면제라 진도 이슈가 필요 없습니다.
 
 ---
 
@@ -139,6 +187,8 @@ python3 tools/checkup.py --owner flyai-kfc
 |---|---|
 | 진도판이 "불러오기 실패" | `course-config`의 owner/repo 오타, 또는 레포가 private |
 | 모든 팀원이 커밋 0 | `aliases`에 각자의 `git config user.name` 값이 빠짐 |
-| 진도 스냅샷 워크플로우 실패 | Actions 쓰기 권한 미설정 (4번 단계) |
+| 워크플로우가 push에서 403 | 조직 설정에서 쓰기 허용, 또는 `SNAPSHOT_TOKEN` 등록 (4번 단계) |
+| 레포 설정의 권한 라디오가 회색 | 조직 기본값이 잠근 것. 조직 설정에서 바꿔야 함 (4-A) |
+| 진도판이 "직접 조회 모드" | 스냅샷이 아직 없음. 정상 동작이며 그대로 써도 됨 |
 | 체크박스를 체크했는데 반영 안 됨 | 이슈 제목이 `[진도] <깃허브아이디>` 형식이 아님 |
 | Pages 404 | Pages 소스가 `/docs`가 아니라 `/`로 설정됨 |

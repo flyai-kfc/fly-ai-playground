@@ -131,6 +131,8 @@
   .day .d-tag { font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
   .day .d-title { font-weight: 600; font-size: 14.5px; margin: 2px 0 3px; }
   .day .d-desc { font-size: 12.5px; color: var(--text-secondary); }
+  .help-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .help-links .btn { font-size: 12.5px; padding: 6px 12px; }
 
   /* member cards */
   .members { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px,1fr)); gap: 16px; }
@@ -238,6 +240,7 @@
     <h2>오늘 할 일</h2>
     <p class="card-sub" id="today-sub">각 카드를 누르면 그날의 상세 가이드로 이동합니다.</p>
     <div class="days" id="days"></div>
+    <div class="help-links" id="help-links"></div>
   </section>
 
   <!-- 팀원별 -->
@@ -280,10 +283,21 @@
     { key: "thinking",label: "에이전트 친화적 사고" },
     { key: "comms",   label: "협업 커뮤니케이션" }
   ];
+  // GitHub Pages는 /docs를 사이트 루트로 서빙하므로 guide/ 폴더는 배포되지 않는다.
+  // 문서 링크는 반드시 레포의 절대 URL이어야 한다. (상대 경로는 404)
+  var REPO_URL = "https://github.com/" + CFG.owner + "/" + CFG.repo;
+  var FILE_URL = REPO_URL + "/blob/main/";
+
   var DAYS = [
-    { n: 1, title: "혼자 끝까지 만들어보기", desc: "스펙 잡기 → 구현 → 첫 PR 머지", href: "../guide/DAY1.md" },
-    { n: 2, title: "같이 만들며 부딪히기",   desc: "공동 작업 → 충돌 해결 → 교차 리뷰", href: "../guide/DAY2.md" },
-    { n: 3, title: "에이전트 환경 만들기",   desc: "CLAUDE.md 규칙 → 스킬 → 회고", href: "../guide/DAY3.md" }
+    { n: 1, title: "혼자 끝까지 만들어보기", desc: "스펙 잡기 → 구현 → 첫 PR 머지", href: FILE_URL + "guide/DAY1.md" },
+    { n: 2, title: "같이 만들며 부딪히기",   desc: "공동 작업 → 충돌 해결 → 교차 리뷰", href: FILE_URL + "guide/DAY2.md" },
+    { n: 3, title: "에이전트 환경 만들기",   desc: "CLAUDE.md 규칙 → 스킬 → 회고", href: FILE_URL + "guide/DAY3.md" }
+  ];
+  var HELP_LINKS = [
+    { label: "Git 치트시트", href: FILE_URL + "guide/GIT-CHEATSHEET.md" },
+    { label: "복붙용 프롬프트", href: FILE_URL + "guide/PROMPTS.md" },
+    { label: "내 진도 체크리스트", href: REPO_URL + "/issues?q=is%3Aissue+label%3Aprogress" },
+    { label: "가이드용 안내", href: FILE_URL + "guide/가이드용.md" }
   ];
 
   var state = { data: null, token: "", lastFetch: 0 };
@@ -407,7 +421,7 @@
       if (!r.ok) return null;
       return r.json();
     }).then(function (snap) {
-      if (!snap || !snap.people) return null;
+      if (!snap || !snap.people || !Object.keys(snap.people).length) return null;
       var members = CFG.members.map(function (m) {
         var p = snap.people[m.login];
         var base = blankMember(m);
@@ -616,10 +630,13 @@
   function renderDays() {
     var d = currentDay();
     el("days").innerHTML = DAYS.map(function (x) {
-      return '<a class="day' + (x.n === d ? " now" : "") + '" href="' + x.href + '">' +
+      return '<a class="day' + (x.n === d ? " now" : "") + '" href="' + x.href + '" target="_blank" rel="noopener">' +
         '<div class="d-tag">Day ' + x.n + (x.n === d ? " · 오늘" : "") + '</div>' +
         '<div class="d-title">' + esc(x.title) + '</div>' +
         '<div class="d-desc">' + esc(x.desc) + '</div></a>';
+    }).join("");
+    el("help-links").innerHTML = HELP_LINKS.map(function (h) {
+      return '<a class="btn" href="' + h.href + '" target="_blank" rel="noopener">' + esc(h.label) + " ↗</a>";
     }).join("");
   }
 
@@ -792,9 +809,13 @@
         stamp += " · 활동 수집 " + new Date(r[0].generatedAt).toLocaleString("ko-KR",
           { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
       } else if (r[0].source === "live") {
-        stamp += " · 스냅샷 없음(GitHub API 직접 조회)";
+        stamp += " · GitHub API 직접 조회 모드";
+        notice("", "<b>직접 조회 모드로 동작 중입니다.</b> 진도 스냅샷 워크플로우가 아직 돌지 않았거나 꺼져 있습니다. " +
+          "그대로 써도 되지만 GitHub의 시간당 조회 한도(IP당 60회)를 아끼려고 자동 새로고침 간격을 20분으로 늘렸습니다. " +
+          "지금 보려면 위 '새로고침'을 누르세요.");
       }
       el("updated").textContent = stamp;
+      schedule(r[0].source === "live" ? 20 * 60 * 1000 : 5 * 60 * 1000);
     }).catch(function (e) {
       if (e && e.rate) {
         notice("warn", "<b>GitHub 요청 한도에 걸렸습니다.</b> 인증 없이는 시간당 60회까지만 조회할 수 있습니다. " +
@@ -809,6 +830,7 @@
           " — <code>docs/index.html</code>의 owner/repo 설정과 레포 공개 여부를 확인해 주세요.");
       }
       el("sub-line").textContent = "불러오기 실패";
+      schedule(10 * 60 * 1000);
     });
   }
 
@@ -826,9 +848,24 @@
     this.textContent = dark ? "다크 모드" : "라이트 모드";
   };
 
+  // 다음 자동 새로고침 예약. 탭이 보이지 않으면 돌아올 때까지 미룬다 (조회 한도 절약).
+  var timer = null;
+  function schedule(ms) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function () {
+      if (document.hidden) {
+        document.addEventListener("visibilitychange", function once() {
+          document.removeEventListener("visibilitychange", once);
+          refresh();
+        });
+      } else {
+        refresh();
+      }
+    }, ms);
+  }
+
   renderDays();
   refresh();
-  setInterval(refresh, 5 * 60 * 1000);
 })();
 </script>
 </body>

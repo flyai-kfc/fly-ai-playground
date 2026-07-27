@@ -1,5 +1,7 @@
 # Day 2 — 같이 만들며 부딪히기
 
+[← 진도판으로](https://flyai-kfc.github.io/fly-ai-playground/)
+
 > 오늘의 목표: **같은 코드를 여러 명이 건드릴 때 생기는 마찰을 직접 겪고, 직접 푼다.**
 > 오늘은 충돌이 나야 성공입니다. 충돌은 사고가 아니라 오늘의 교재입니다.
 
@@ -128,4 +130,4 @@ gh pr checkout <PR번호>      # 남의 PR을 내 컴퓨터로 가져오기
 
 conflict를 아무도 못 겪었다면 **일부러라도 만들어서** 겪고 가세요. Day 3에서는 기회가 없습니다.
 
-[진도 이슈](../../issues)에서 Day 2 체크박스를 체크하세요.
+[진도 이슈](https://github.com/flyai-kfc/fly-ai-playground/issues?q=is%3Aissue+label%3Aprogress)에서 Day 2 체크박스를 체크하세요.
