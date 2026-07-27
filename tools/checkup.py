@@ -76,10 +76,20 @@ def pace_of(overall, elapsed):
 
 
 def run(cmd, cwd=None):
-    p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    """git 출력을 읽는다.
+
+    Windows에서는 subprocess가 로케일 코덱(한국어 환경이면 cp949)으로 디코딩하려다
+    한글 커밋 메시지에서 UnicodeDecodeError를 낸다. git은 UTF-8로 출력하므로
+    encoding을 명시하고, 깨지는 문자는 버리지 말고 대체한다.
+    """
+    try:
+        p = subprocess.run(cmd, cwd=cwd, capture_output=True,
+                           encoding="utf-8", errors="replace")
+    except FileNotFoundError:
+        sys.exit("git을 찾을 수 없습니다. git이 설치되어 있고 PATH에 있는지 확인하세요.")
     if p.returncode != 0:
         return ""
-    return p.stdout
+    return p.stdout or ""
 
 
 def ensure_clone(owner, repo, workdir, source=None):
@@ -89,11 +99,15 @@ def ensure_clone(owner, repo, workdir, source=None):
         run(["git", "fetch", "--all", "--prune", "--quiet"], cwd=path)
     else:
         os.makedirs(workdir, exist_ok=True)
-        p = subprocess.run(
-            ["git", "clone", "--no-single-branch", "--quiet", url, path],
-            capture_output=True, text=True)
+        try:
+            p = subprocess.run(
+                ["git", "clone", "--no-single-branch", "--quiet", url, path],
+                capture_output=True, encoding="utf-8", errors="replace")
+        except FileNotFoundError:
+            sys.exit("git을 찾을 수 없습니다. git이 설치되어 있고 PATH에 있는지 확인하세요.")
         if p.returncode != 0:
-            sys.exit("레포를 클론하지 못했습니다. public인지, 이름이 맞는지 확인하세요.\n" + p.stderr.strip())
+            sys.exit("레포를 클론하지 못했습니다. public인지, 이름이 맞는지 확인하세요.\n"
+                     + (p.stderr or "").strip())
     return path
 
 
@@ -128,6 +142,14 @@ def build_alias(members):
 
 
 def main():
+    # Windows 콘솔(cp949)은 이 스크립트가 쓰는 기호·한글 일부를 인코딩하지 못해
+    # 출력 단계에서 죽는다. 표준 출력을 UTF-8로 바꾸고, 안 되는 문자는 대체한다.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--owner", required=True)
     ap.add_argument("--repo", default="fly-ai-playground")
