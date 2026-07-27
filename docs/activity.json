@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T16:04:16.150Z",
+  "generatedAt": "2026-07-27T16:20:40.748Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -102,7 +102,7 @@
     "GunderGie": {
       "name": "김동건",
       "role": "guide",
-      "commits": 4,
+      "commits": 5,
       "mergeCommits": 1,
       "prsOpened": 0,
       "prsMerged": 0,
@@ -113,8 +113,12 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-27T16:03:58Z",
+      "lastActivity": "2026-07-27T16:18:57Z",
       "recentCommits": [
+        {
+          "message": "fix: tools/checkup.py 디코딩 에러 해결 및 SETUP.md 수정",
+          "date": "2026-07-27T16:18:57Z"
+        },
         {
           "message": "Merge branch 'main' of https://github.com/flyai-kfc/fly-ai-playground",
           "date": "2026-07-27T16:03:58Z"
