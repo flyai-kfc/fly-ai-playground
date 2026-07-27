@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T15:32:09.115Z",
+  "generatedAt": "2026-07-27T15:34:27.440Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -113,7 +113,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-27T15:31:56Z",
+      "lastActivity": "2026-07-27T15:34:15Z",
       "recentCommits": [
         {
           "message": "fix: 추적되지 않은 activity.json이 커밋되지 않던 문제 수정",
