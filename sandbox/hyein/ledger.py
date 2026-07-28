@@ -1,4 +1,4 @@
-"""가계부 CLI - 4단계: 검색과 필터
+"""가계부 CLI - 5단계: 통계 요약
 
 data.json 파일에 기록을 쌓고, 번호로 지목해서 지우거나 고칩니다.
 """
@@ -186,6 +186,48 @@ def cmd_edit(args):
     print("변경 후: " + format_record(record))
 
 
+def cmd_stats(args):
+    data = load_data()
+    records = data["records"]
+
+    # 기준 달을 정한다. --month 를 안 주면 이번 달.
+    month = args.month or date.today().strftime("%Y-%m")
+
+    # 날짜가 "2026-07-28" 이므로 앞 7글자가 "2026-07" 이다
+    target = [r for r in records if r["date"].startswith(month)]
+
+    print(f"[{month} 지출 요약]")
+
+    if not target:
+        print("이 달에는 기록이 없습니다.")
+        return
+
+    total = sum(r["amount"] for r in target)
+
+    # 카테고리별로 금액을 더한다
+    by_category = {}
+    for r in target:
+        by_category[r["category"]] = by_category.get(r["category"], 0) + r["amount"]
+
+    # 많이 쓴 카테고리가 위로 오게 정렬
+    ordered = sorted(by_category.items(), key=lambda pair: pair[1], reverse=True)
+
+    print()
+    for category, amount in ordered:
+        share = amount / total * 100
+        bar = "█" * round(share / 5)   # 5%당 한 칸
+        print(f"  {category:<8} {amount:>9,}원  {share:5.1f}%  {bar}")
+
+    # 며칠에 걸쳐 썼는지 (기록이 있는 날의 수)
+    days_used = len({r["date"] for r in target})
+
+    print()
+    print(f"  총 지출   {total:,}원")
+    print(f"  기록 건수 {len(target)}건")
+    print(f"  기록한 날 {days_used}일")
+    print(f"  하루 평균 {round(total / days_used):,}원")
+
+
 # ---------- 명령어 해석 ----------
 
 def main():
@@ -224,6 +266,10 @@ def main():
                           help="이 날짜부터 YYYY-MM-DD")
     p_search.add_argument("--to", help="이 날짜까지 YYYY-MM-DD")
     p_search.set_defaults(func=cmd_search)
+
+    p_stats = sub.add_parser("stats", help="통계 요약")
+    p_stats.add_argument("--month", help="YYYY-MM (생략하면 이번 달)")
+    p_stats.set_defaults(func=cmd_stats)
 
     args = parser.parse_args()
     args.func(args)
