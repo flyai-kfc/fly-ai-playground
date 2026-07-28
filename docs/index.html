@@ -1,872 +1,1665 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FLY AI · 에이전트 친숙도 3일 코스 진도판</title>
-<script id="course-config" type="application/json">
-{
-  "owner": "flyai-kfc",
-  "repo": "fly-ai-playground",
-  "startDate": "2026-07-28",
-  "members": [
-    { "login": "nocked115",  "name": "이수현", "role": "learner", "aliases": [] },
-    { "login": "hyeineom12", "name": "엄혜인", "role": "learner", "aliases": [] },
-    { "login": "hhseo9519",  "name": "서현호", "role": "learner", "aliases": [] },
-    { "login": "GunderGie",  "name": "김동건", "role": "guide", "skip": true, "aliases": [] },
-    { "login": "mintoly31",  "name": "정민",   "role": "guide", "skip": true, "aliases": [] }
-  ]
-}
-</script>
-<style>
-  :root {
-    color-scheme: light;
-    --surface-1: #fcfcfb;
-    --plane: #f9f9f7;
-    --text-primary: #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted: #898781;
-    --grid: #e1e0d9;
-    --baseline: #c3c2b7;
-    --border: rgba(11,11,11,0.10);
-    --series-1: #2a78d6;
-    --series-2: #eb6834;
-    --series-3: #1baf7a;
-    --series-4: #eda100;
-    --track: #e8e7e2;
-    --good: #0ca30c;
-    --warning: #fab219;
-    --critical: #d03b3b;
-    --success-text: #006300;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) {
-      color-scheme: dark;
-      --surface-1: #1a1a19;
-      --plane: #0d0d0d;
-      --text-primary: #ffffff;
-      --text-secondary: #c3c2b7;
-      --text-muted: #898781;
-      --grid: #2c2c2a;
-      --baseline: #383835;
-      --border: rgba(255,255,255,0.10);
-      --series-1: #3987e5;
-      --series-2: #d95926;
-      --series-3: #199e70;
-      --series-4: #c98500;
-      --track: #2c2c2a;
-      --success-text: #0ca30c;
-    }
-  }
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-    --surface-1: #1a1a19;
-    --plane: #0d0d0d;
-    --text-primary: #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted: #898781;
-    --grid: #2c2c2a;
-    --baseline: #383835;
-    --border: rgba(255,255,255,0.10);
-    --series-1: #3987e5;
-    --series-2: #d95926;
-    --series-3: #199e70;
-    --series-4: #c98500;
-    --track: #2c2c2a;
-    --success-text: #0ca30c;
-  }
-
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--plane);
-    color: var(--text-primary);
-    font-family: system-ui, -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 72px; }
-
-  header.top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
-  h1 { font-size: 21px; font-weight: 650; margin: 0 0 4px; letter-spacing: -0.01em; }
-  .sub { color: var(--text-secondary); font-size: 13.5px; margin: 0; }
-  .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-
-  button, .btn {
-    font: inherit; font-size: 13px; padding: 7px 13px; border-radius: 8px;
-    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
-    cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-  }
-  button:hover, .btn:hover { background: var(--plane); }
-  button[aria-pressed="true"] { border-color: var(--series-1); color: var(--series-1); }
-
-  .card {
-    background: var(--surface-1); border: 1px solid var(--border);
-    border-radius: 14px; padding: 20px 22px; margin-bottom: 16px;
-  }
-  .card h2 { font-size: 15px; font-weight: 620; margin: 0 0 2px; }
-  .card .card-sub { color: var(--text-secondary); font-size: 13px; margin: 0 0 16px; }
-
-  /* hero */
-  .hero-row { display: flex; gap: 28px; align-items: flex-end; flex-wrap: wrap; }
-  .hero-fig { font-size: 56px; font-weight: 640; line-height: 1; letter-spacing: -0.02em; }
-  .hero-label { color: var(--text-secondary); font-size: 13px; margin-bottom: 6px; }
-  .hero-note { color: var(--text-secondary); font-size: 13px; max-width: 44ch; }
-
-  /* stat tiles */
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 20px; }
-  .tile { background: var(--surface-1); padding: 14px 16px; }
-  .tile .t-label { color: var(--text-secondary); font-size: 12.5px; margin-bottom: 3px; }
-  .tile .t-value { font-size: 25px; font-weight: 620; line-height: 1.15; }
-  .tile .t-note { color: var(--text-muted); font-size: 11.5px; margin-top: 2px; }
-
-  /* day strip */
-  .days { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 10px; }
-  .day {
-    border: 1px solid var(--border); border-radius: 11px; padding: 13px 15px; background: var(--surface-1);
-    display: block; text-decoration: none; color: inherit;
-  }
-  .day:hover { border-color: var(--baseline); }
-  .day.now { border-color: var(--series-1); box-shadow: inset 0 0 0 1px var(--series-1); }
-  .day .d-tag { font-size: 11.5px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
-  .day .d-title { font-weight: 600; font-size: 14.5px; margin: 2px 0 3px; }
-  .day .d-desc { font-size: 12.5px; color: var(--text-secondary); }
-  .help-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-  .help-links .btn { font-size: 12.5px; padding: 6px 12px; }
-
-  /* member cards */
-  .members { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px,1fr)); gap: 16px; }
-  .m-head { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; }
-  .m-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--track); flex: none; border: 1px solid var(--border); }
-  .m-name { font-weight: 620; font-size: 15px; line-height: 1.25; }
-  .m-login { color: var(--text-muted); font-size: 12.5px; }
-  .m-overall { margin-left: auto; text-align: right; }
-  .m-overall .pct { font-size: 22px; font-weight: 620; line-height: 1; }
-  .m-overall .cap { font-size: 11.5px; color: var(--text-muted); }
-
-  /* meters */
-  .meter + .meter { margin-top: 11px; }
-  .meter-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 5px; }
-  .meter-name { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 7px; }
-  .swatch { width: 9px; height: 9px; border-radius: 2px; flex: none; }
-  .meter-val { font-size: 12.5px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
-  .track { height: 7px; background: var(--track); border-radius: 4px; overflow: hidden; }
-  .fill { height: 100%; border-radius: 0 4px 4px 0; transition: width .5s ease; }
-  .fill[data-v="0"] { border-radius: 0; }
-
-  /* badges */
-  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 15px; }
-  .badge { font-size: 11.5px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
-  .badge .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
-  .badge.done { color: var(--success-text); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
-  .badge.wip { color: var(--text-secondary); }
-  .badge.miss { color: var(--critical); border-color: color-mix(in srgb, var(--critical) 40%, transparent); }
-
-  .m-note { margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--grid); font-size: 13px; color: var(--text-secondary); }
-  .m-note strong { color: var(--text-primary); font-weight: 600; }
-  .m-note code { background: var(--plane); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
-
-  /* pace */
-  .pace-row { margin: -4px 0 14px; }
-  .pace { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); display: inline-flex; align-items: center; gap: 5px; }
-  .pace.fast { color: var(--success-text); border-color: color-mix(in srgb, var(--good) 45%, transparent); }
-  .pace.slow { color: var(--critical); border-color: color-mix(in srgb, var(--critical) 45%, transparent); }
-
-  /* guide (실습 면제) */
-  .guide-card { opacity: .92; }
-  .guide-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-  .guide-stats > div { background: var(--surface-1); padding: 12px 14px; }
-  .guide-stats .g-v { font-size: 21px; font-weight: 620; line-height: 1.15; }
-  .guide-stats .g-l { font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; }
-
-  /* evaluation */
-  .eval-item { padding: 13px 0; border-top: 1px solid var(--grid); }
-  .eval-item:first-of-type { border-top: none; padding-top: 0; }
-  .eval-who { font-weight: 600; font-size: 13.5px; margin-bottom: 3px; }
-  .eval-body { font-size: 13.5px; color: var(--text-secondary); }
-  .eval-next { font-size: 13px; margin-top: 5px; }
-  .eval-next b { font-weight: 600; color: var(--text-primary); }
-
-  /* table view */
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--grid); }
-  th { color: var(--text-secondary); font-weight: 600; font-size: 12.5px; }
-  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  [hidden] { display: none !important; }
-
-  .notice { border-radius: 10px; padding: 11px 14px; font-size: 13px; margin-bottom: 16px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); }
-  .notice.warn { border-color: color-mix(in srgb, var(--warning) 55%, transparent); }
-  .notice.err { border-color: color-mix(in srgb, var(--critical) 50%, transparent); }
-  .notice b { color: var(--text-primary); }
-  .notice code { background: var(--plane); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
-
-  footer { color: var(--text-muted); font-size: 12.5px; margin-top: 26px; text-align: center; }
-  a { color: var(--series-1); }
-  .skeleton { color: var(--text-muted); font-size: 13.5px; }
-</style>
-</head>
-<body>
-<div class="wrap">
-
-  <header class="top">
-    <div>
-      <h1>에이전트 친숙도 3일 코스 · 진도판</h1>
-      <p class="sub" id="sub-line">불러오는 중…</p>
-    </div>
-    <div class="top-actions">
-      <button id="btn-refresh" type="button">새로고침</button>
-      <button id="btn-table" type="button" aria-pressed="false">표로 보기</button>
-      <button id="btn-theme" type="button">다크 모드</button>
-      <a class="btn" id="repo-link" href="#" target="_blank" rel="noopener">레포 열기 ↗</a>
-    </div>
-  </header>
-
-  <div id="notices"></div>
-
-  <!-- 팀 전체 -->
-  <section class="card">
-    <div class="hero-row">
-      <div>
-        <div class="hero-label">팀 전체 진도</div>
-        <div class="hero-fig" id="hero">—</div>
-      </div>
-      <p class="hero-note" id="hero-note">학습 대상 팀원들의 4대 역량 도달도 평균입니다. 커밋·PR·리뷰·체크리스트에서 자동으로 계산됩니다.</p>
-    </div>
-    <div class="tiles" id="tiles"></div>
-  </section>
-
-  <!-- 오늘 할 일 -->
-  <section class="card">
-    <h2>오늘 할 일</h2>
-    <p class="card-sub" id="today-sub">각 카드를 누르면 그날의 상세 가이드로 이동합니다.</p>
-    <div class="days" id="days"></div>
-    <div class="help-links" id="help-links"></div>
-  </section>
-
-  <!-- 팀원별 -->
-  <section id="member-view">
-    <div class="members" id="members"><p class="skeleton">팀원 데이터를 불러오는 중…</p></div>
-  </section>
-
-  <!-- 표 보기 -->
-  <section class="card" id="table-view" hidden>
-    <h2>전체 수치 (표)</h2>
-    <p class="card-sub">색에 의존하지 않고 같은 데이터를 확인할 수 있습니다.</p>
-    <div style="overflow-x:auto"><table id="data-table"></table></div>
-  </section>
-
-  <!-- 평가 -->
-  <section class="card">
-    <h2>진행 상황 평가</h2>
-    <p class="card-sub" id="eval-sub">하루 2회(점심·저녁) 갱신됩니다.</p>
-    <div id="eval"><p class="skeleton">평가를 불러오는 중…</p></div>
-  </section>
-
-  <footer>
-    FLY AI 에이전트 친숙도 코스 · 진도는 GitHub 활동에서 자동 계산됩니다 ·
-    <span id="updated">—</span>
-  </footer>
-</div>
-
-<script>
-(function () {
-  "use strict";
-
-  var CFG = JSON.parse(document.getElementById("course-config").textContent);
-  var API = "https://api.github.com/repos/" + CFG.owner + "/" + CFG.repo;
-  var RAW = "https://raw.githubusercontent.com/" + CFG.owner + "/" + CFG.repo + "/main/docs/evaluation.json";
-
-  var SERIES = ["--series-1", "--series-2", "--series-3", "--series-4"];
-  var COMPETENCIES = [
-    { key: "git",     label: "Git 사용법" },
-    { key: "harness", label: "하네스 엔지니어링" },
-    { key: "thinking",label: "에이전트 친화적 사고" },
-    { key: "comms",   label: "협업 커뮤니케이션" }
-  ];
-  // GitHub Pages는 /docs를 사이트 루트로 서빙하므로 guide/ 폴더는 배포되지 않는다.
-  // 문서 링크는 반드시 레포의 절대 URL이어야 한다. (상대 경로는 404)
-  var REPO_URL = "https://github.com/" + CFG.owner + "/" + CFG.repo;
-  var FILE_URL = REPO_URL + "/blob/main/";
-
-  var DAYS = [
-    { n: 1, title: "혼자 끝까지 만들어보기", desc: "스펙 잡기 → 구현 → 첫 PR 머지", href: FILE_URL + "guide/DAY1.md" },
-    { n: 2, title: "같이 만들며 부딪히기",   desc: "공동 작업 → 충돌 해결 → 교차 리뷰", href: FILE_URL + "guide/DAY2.md" },
-    { n: 3, title: "에이전트 환경 만들기",   desc: "CLAUDE.md 규칙 → 스킬 → 회고", href: FILE_URL + "guide/DAY3.md" }
-  ];
-  var HELP_LINKS = [
-    { label: "Git 치트시트", href: FILE_URL + "guide/GIT-CHEATSHEET.md" },
-    { label: "복붙용 프롬프트", href: FILE_URL + "guide/PROMPTS.md" },
-    { label: "내 진도 체크리스트", href: REPO_URL + "/issues?q=is%3Aissue+label%3Aprogress" },
-    { label: "가이드용 안내", href: FILE_URL + "guide/가이드용.md" }
-  ];
-
-  var state = { data: null, token: "", lastFetch: 0 };
-
-  /* ---------- helpers ---------- */
-  function el(id) { return document.getElementById(id); }
-  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
-    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
-  function clamp(n) { return Math.max(0, Math.min(100, Math.round(n))); }
-
-  function headers() {
-    var h = { "Accept": "application/vnd.github+json" };
-    if (state.token) h.Authorization = "Bearer " + state.token;
-    return h;
-  }
-
-  function notice(kind, html) {
-    var d = document.createElement("div");
-    d.className = "notice " + kind;
-    d.innerHTML = html;
-    el("notices").appendChild(d);
-  }
-
-  function ghJSON(path) {
-    return fetch(API + path, { headers: headers() }).then(function (r) {
-      if (r.status === 403 || r.status === 429) { var e = new Error("rate"); e.rate = true; throw e; }
-      if (r.status === 404) return null;
-      if (!r.ok) throw new Error("GitHub " + r.status);
-      return r.json();
-    });
-  }
-
-  /* ---------- member matching ---------- */
-  function matcher(members) {
-    var byKey = {};
-    members.forEach(function (m) {
-      byKey[m.login.toLowerCase()] = m.login;
-      byKey[m.name.toLowerCase()] = m.login;
-      (m.aliases || []).forEach(function (a) { byKey[String(a).toLowerCase()] = m.login; });
-    });
-    return function (login, name, email) {
-      var keys = [login, name, email && String(email).split("@")[0]];
-      for (var i = 0; i < keys.length; i++) {
-        var k = keys[i] && String(keys[i]).toLowerCase();
-        if (k && byKey[k]) return byKey[k];
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FLY AI · 에이전트 친숙도 3일 코스 진도판</title>
+    <script id="course-config" type="application/json">
+      {
+        "owner": "flyai-kfc",
+        "repo": "fly-ai-playground",
+        "startDate": "2026-07-28",
+        "members": [
+          {
+            "login": "nocked115",
+            "name": "이수현",
+            "role": "learner",
+            "aliases": []
+          },
+          {
+            "login": "hyeineom12",
+            "name": "엄혜인",
+            "role": "learner",
+            "aliases": ["eomhyein04@gmail.com"]
+          },
+          {
+            "login": "hhseo9519",
+            "name": "서현호",
+            "role": "learner",
+            "aliases": []
+          },
+          {
+            "login": "GunderGie",
+            "name": "김동건",
+            "role": "guide",
+            "skip": true,
+            "aliases": []
+          },
+          {
+            "login": "mintoly31",
+            "name": "정민",
+            "role": "guide",
+            "skip": true,
+            "aliases": []
+          }
+        ]
       }
-      return null;
-    };
-  }
-
-  /* ---------- checklist parsing ---------- */
-  function parseChecklist(body) {
-    var out = { 1: { done: 0, total: 0 }, 2: { done: 0, total: 0 }, 3: { done: 0, total: 0 }, items: {} };
-    if (!body) return out;
-    var day = 0;
-    body.split(/\r?\n/).forEach(function (line) {
-      var h = line.match(/^#{2,4}\s*Day\s*([123])/i);
-      if (h) { day = Number(h[1]); return; }
-      var c = line.match(/^\s*[-*]\s*\[( |x|X)\]\s*(.+)$/);
-      if (c && day) {
-        var done = c[1].toLowerCase() === "x";
-        out[day].total++;
-        if (done) out[day].done++;
-        out.items[c[2].trim()] = done;
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+        --surface-1: #fcfcfb;
+        --plane: #f9f9f7;
+        --text-primary: #0b0b0b;
+        --text-secondary: #52514e;
+        --text-muted: #898781;
+        --grid: #e1e0d9;
+        --baseline: #c3c2b7;
+        --border: rgba(11, 11, 11, 0.1);
+        --series-1: #2a78d6;
+        --series-2: #eb6834;
+        --series-3: #1baf7a;
+        --series-4: #eda100;
+        --track: #e8e7e2;
+        --good: #0ca30c;
+        --warning: #fab219;
+        --critical: #d03b3b;
+        --success-text: #006300;
       }
-    });
-    return out;
-  }
-  function checked(cl, kw) {
-    var keys = Object.keys(cl.items);
-    for (var i = 0; i < keys.length; i++) {
-      if (keys[i].indexOf(kw) !== -1 && cl.items[keys[i]]) return true;
-    }
-    return false;
-  }
+      @media (prefers-color-scheme: dark) {
+        :root:where(:not([data-theme="light"])) {
+          color-scheme: dark;
+          --surface-1: #1a1a19;
+          --plane: #0d0d0d;
+          --text-primary: #ffffff;
+          --text-secondary: #c3c2b7;
+          --text-muted: #898781;
+          --grid: #2c2c2a;
+          --baseline: #383835;
+          --border: rgba(255, 255, 255, 0.1);
+          --series-1: #3987e5;
+          --series-2: #d95926;
+          --series-3: #199e70;
+          --series-4: #c98500;
+          --track: #2c2c2a;
+          --success-text: #0ca30c;
+        }
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --surface-1: #1a1a19;
+        --plane: #0d0d0d;
+        --text-primary: #ffffff;
+        --text-secondary: #c3c2b7;
+        --text-muted: #898781;
+        --grid: #2c2c2a;
+        --baseline: #383835;
+        --border: rgba(255, 255, 255, 0.1);
+        --series-1: #3987e5;
+        --series-2: #d95926;
+        --series-3: #199e70;
+        --series-4: #c98500;
+        --track: #2c2c2a;
+        --success-text: #0ca30c;
+      }
 
-  /* ---------- scoring ---------- */
-  function score(m, d) {
-    var cl = m.checklist;
-    var git = 0;
-    if (m.commits > 0) git += 25;
-    if (m.prsOpened > 0) git += 25;
-    if (m.prsMerged > 0) git += 25;
-    if (m.mergeCommits > 0 || checked(cl, "conflict")) git += 25;
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--plane);
+        color: var(--text-primary);
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          "Apple SD Gothic Neo",
+          "Malgun Gothic",
+          sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 28px 20px 72px;
+      }
 
-    var harness = 0;
-    if (m.claudeMdCommits > 0) harness += 40;
-    if (m.skillCommits > 0) harness += 40;
-    if (checked(cl, "서브에이전트")) harness += 20;
+      header.top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+      h1 {
+        font-size: 21px;
+        font-weight: 650;
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+      }
+      .sub {
+        color: var(--text-secondary);
+        font-size: 13.5px;
+        margin: 0;
+      }
+      .top-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
 
-    var thinking = 0;
-    if (m.hasSpec) thinking += 40;
-    if (m.prBodyQuality >= 1) thinking += 30;
-    if (m.commits >= 3) thinking += 30;
+      button,
+      .btn {
+        font: inherit;
+        font-size: 13px;
+        padding: 7px 13px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface-1);
+        color: var(--text-primary);
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      button:hover,
+      .btn:hover {
+        background: var(--plane);
+      }
+      button[aria-pressed="true"] {
+        border-color: var(--series-1);
+        color: var(--series-1);
+      }
 
-    var comms = 0;
-    if (m.reviewsGiven > 0) comms += 40;
-    if (m.issueActivity > 0) comms += 30;
-    if (m.prBodyQuality >= 2) comms += 30;
+      .card {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-bottom: 16px;
+      }
+      .card h2 {
+        font-size: 15px;
+        font-weight: 620;
+        margin: 0 0 2px;
+      }
+      .card .card-sub {
+        color: var(--text-secondary);
+        font-size: 13px;
+        margin: 0 0 16px;
+      }
 
-    return { git: clamp(git), harness: clamp(harness), thinking: clamp(thinking), comms: clamp(comms) };
-  }
+      /* hero */
+      .hero-row {
+        display: flex;
+        gap: 28px;
+        align-items: flex-end;
+        flex-wrap: wrap;
+      }
+      .hero-fig {
+        font-size: 56px;
+        font-weight: 640;
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+      .hero-label {
+        color: var(--text-secondary);
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      .hero-note {
+        color: var(--text-secondary);
+        font-size: 13px;
+        max-width: 44ch;
+      }
 
-  /* ---------- load ---------- */
-  function pageAll(path) {
-    // one page of 100 is enough for a 3-day course; keeps the rate limit low
-    return ghJSON(path).then(function (r) { return r || []; });
-  }
+      /* stat tiles */
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 20px;
+      }
+      .tile {
+        background: var(--surface-1);
+        padding: 14px 16px;
+      }
+      .tile .t-label {
+        color: var(--text-secondary);
+        font-size: 12.5px;
+        margin-bottom: 3px;
+      }
+      .tile .t-value {
+        font-size: 25px;
+        font-weight: 620;
+        line-height: 1.15;
+      }
+      .tile .t-note {
+        color: var(--text-muted);
+        font-size: 11.5px;
+        margin-top: 2px;
+      }
 
-  function blankMember(m) {
-    return Object.assign({}, m, {
-      commits: 0, mergeCommits: 0, prsOpened: 0, prsMerged: 0, reviewsGiven: 0,
-      issueActivity: 0, claudeMdCommits: 0, skillCommits: 0, hasSpec: false,
-      prBodyQuality: 0, checklist: parseChecklist(""), lastActivity: null, folders: []
-    });
-  }
+      /* day strip */
+      .days {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 10px;
+      }
+      .day {
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        padding: 13px 15px;
+        background: var(--surface-1);
+        display: block;
+        text-decoration: none;
+        color: inherit;
+      }
+      .day:hover {
+        border-color: var(--baseline);
+      }
+      .day.now {
+        border-color: var(--series-1);
+        box-shadow: inset 0 0 0 1px var(--series-1);
+      }
+      .day .d-tag {
+        font-size: 11.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .day .d-title {
+        font-weight: 600;
+        font-size: 14.5px;
+        margin: 2px 0 3px;
+      }
+      .day .d-desc {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+      }
+      .help-links {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .help-links .btn {
+        font-size: 12.5px;
+        padding: 6px 12px;
+      }
 
-  // 1순위: GitHub Actions가 만들어 둔 스냅샷. API 요청이 0회라 한도에 걸리지 않는다.
-  function loadSnapshot() {
-    return fetch("./activity.json?t=" + Date.now()).then(function (r) {
-      if (!r.ok) return null;
-      return r.json();
-    }).then(function (snap) {
-      if (!snap || !snap.people || !Object.keys(snap.people).length) return null;
-      var members = CFG.members.map(function (m) {
-        var p = snap.people[m.login];
-        var base = blankMember(m);
-        if (!p) return base;
-        ["commits","mergeCommits","prsOpened","prsMerged","reviewsGiven",
-         "claudeMdCommits","skillCommits","prBodyQuality"].forEach(function (k) {
-          if (typeof p[k] === "number") base[k] = p[k];
-        });
-        base.hasSpec = !!p.hasSpec;
-        base.issueActivity = (p.issueComments || 0) + (p.issuesOpened || 0);
-        base.lastActivity = p.lastActivity || null;
-        base.issueUrl = p.issueUrl || null;
-        if (p.checklist) {
-          base.checklist = {
-            1: { done: (p.checklist["1"] || [0,0])[0], total: (p.checklist["1"] || [0,0])[1] },
-            2: { done: (p.checklist["2"] || [0,0])[0], total: (p.checklist["2"] || [0,0])[1] },
-            3: { done: (p.checklist["3"] || [0,0])[0], total: (p.checklist["3"] || [0,0])[1] },
-            items: p.checklistItems || {}
+      /* member cards */
+      .members {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        gap: 16px;
+      }
+      .m-head {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 16px;
+      }
+      .m-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--track);
+        flex: none;
+        border: 1px solid var(--border);
+      }
+      .m-name {
+        font-weight: 620;
+        font-size: 15px;
+        line-height: 1.25;
+      }
+      .m-login {
+        color: var(--text-muted);
+        font-size: 12.5px;
+      }
+      .m-overall {
+        margin-left: auto;
+        text-align: right;
+      }
+      .m-overall .pct {
+        font-size: 22px;
+        font-weight: 620;
+        line-height: 1;
+      }
+      .m-overall .cap {
+        font-size: 11.5px;
+        color: var(--text-muted);
+      }
+
+      /* meters */
+      .meter + .meter {
+        margin-top: 11px;
+      }
+      .meter-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 5px;
+      }
+      .meter-name {
+        font-size: 13px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .swatch {
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        flex: none;
+      }
+      .meter-val {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        font-variant-numeric: tabular-nums;
+      }
+      .track {
+        height: 7px;
+        background: var(--track);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        border-radius: 0 4px 4px 0;
+        transition: width 0.5s ease;
+      }
+      .fill[data-v="0"] {
+        border-radius: 0;
+      }
+
+      /* badges */
+      .badges {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+      .badge {
+        font-size: 11.5px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+      }
+      .badge .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex: none;
+      }
+      .badge.done {
+        color: var(--success-text);
+        border-color: color-mix(in srgb, var(--good) 40%, transparent);
+      }
+      .badge.wip {
+        color: var(--text-secondary);
+      }
+      .badge.miss {
+        color: var(--critical);
+        border-color: color-mix(in srgb, var(--critical) 40%, transparent);
+      }
+
+      .m-note {
+        margin-top: 14px;
+        padding-top: 13px;
+        border-top: 1px solid var(--grid);
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+      .m-note strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+      .m-note code {
+        background: var(--plane);
+        padding: 1px 5px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      /* pace */
+      .pace-row {
+        margin: -4px 0 14px;
+      }
+      .pace {
+        font-size: 12px;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .pace.fast {
+        color: var(--success-text);
+        border-color: color-mix(in srgb, var(--good) 45%, transparent);
+      }
+      .pace.slow {
+        color: var(--critical);
+        border-color: color-mix(in srgb, var(--critical) 45%, transparent);
+      }
+
+      /* guide (실습 면제) */
+      .guide-card {
+        opacity: 0.92;
+      }
+      .guide-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .guide-stats > div {
+        background: var(--surface-1);
+        padding: 12px 14px;
+      }
+      .guide-stats .g-v {
+        font-size: 21px;
+        font-weight: 620;
+        line-height: 1.15;
+      }
+      .guide-stats .g-l {
+        font-size: 11.5px;
+        color: var(--text-secondary);
+        margin-top: 2px;
+      }
+
+      /* evaluation */
+      .eval-item {
+        padding: 13px 0;
+        border-top: 1px solid var(--grid);
+      }
+      .eval-item:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      .eval-who {
+        font-weight: 600;
+        font-size: 13.5px;
+        margin-bottom: 3px;
+      }
+      .eval-body {
+        font-size: 13.5px;
+        color: var(--text-secondary);
+      }
+      .eval-next {
+        font-size: 13px;
+        margin-top: 5px;
+      }
+      .eval-next b {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      /* table view */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--grid);
+      }
+      th {
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 12.5px;
+      }
+      td.num,
+      th.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      [hidden] {
+        display: none !important;
+      }
+
+      .notice {
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-size: 13px;
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface-1);
+        color: var(--text-secondary);
+      }
+      .notice.warn {
+        border-color: color-mix(in srgb, var(--warning) 55%, transparent);
+      }
+      .notice.err {
+        border-color: color-mix(in srgb, var(--critical) 50%, transparent);
+      }
+      .notice b {
+        color: var(--text-primary);
+      }
+      .notice code {
+        background: var(--plane);
+        padding: 1px 5px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      footer {
+        color: var(--text-muted);
+        font-size: 12.5px;
+        margin-top: 26px;
+        text-align: center;
+      }
+      a {
+        color: var(--series-1);
+      }
+      .skeleton {
+        color: var(--text-muted);
+        font-size: 13.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div>
+          <h1>에이전트 친숙도 3일 코스 · 진도판</h1>
+          <p class="sub" id="sub-line">불러오는 중…</p>
+        </div>
+        <div class="top-actions">
+          <button id="btn-refresh" type="button">새로고침</button>
+          <button id="btn-table" type="button" aria-pressed="false">
+            표로 보기
+          </button>
+          <button id="btn-theme" type="button">다크 모드</button>
+          <a class="btn" id="repo-link" href="#" target="_blank" rel="noopener"
+            >레포 열기 ↗</a
+          >
+        </div>
+      </header>
+
+      <div id="notices"></div>
+
+      <!-- 팀 전체 -->
+      <section class="card">
+        <div class="hero-row">
+          <div>
+            <div class="hero-label">팀 전체 진도</div>
+            <div class="hero-fig" id="hero">—</div>
+          </div>
+          <p class="hero-note" id="hero-note">
+            학습 대상 팀원들의 4대 역량 도달도 평균입니다.
+            커밋·PR·리뷰·체크리스트에서 자동으로 계산됩니다.
+          </p>
+        </div>
+        <div class="tiles" id="tiles"></div>
+      </section>
+
+      <!-- 오늘 할 일 -->
+      <section class="card">
+        <h2>오늘 할 일</h2>
+        <p class="card-sub" id="today-sub">
+          각 카드를 누르면 그날의 상세 가이드로 이동합니다.
+        </p>
+        <div class="days" id="days"></div>
+        <div class="help-links" id="help-links"></div>
+      </section>
+
+      <!-- 팀원별 -->
+      <section id="member-view">
+        <div class="members" id="members">
+          <p class="skeleton">팀원 데이터를 불러오는 중…</p>
+        </div>
+      </section>
+
+      <!-- 표 보기 -->
+      <section class="card" id="table-view" hidden>
+        <h2>전체 수치 (표)</h2>
+        <p class="card-sub">
+          색에 의존하지 않고 같은 데이터를 확인할 수 있습니다.
+        </p>
+        <div style="overflow-x: auto"><table id="data-table"></table></div>
+      </section>
+
+      <!-- 평가 -->
+      <section class="card">
+        <h2>진행 상황 평가</h2>
+        <p class="card-sub" id="eval-sub">하루 2회(점심·저녁) 갱신됩니다.</p>
+        <div id="eval"><p class="skeleton">평가를 불러오는 중…</p></div>
+      </section>
+
+      <footer>
+        FLY AI 에이전트 친숙도 코스 · 진도는 GitHub 활동에서 자동 계산됩니다 ·
+        <span id="updated">—</span>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var CFG = JSON.parse(
+          document.getElementById("course-config").textContent,
+        );
+        var API = "https://api.github.com/repos/" + CFG.owner + "/" + CFG.repo;
+        var RAW =
+          "https://raw.githubusercontent.com/" +
+          CFG.owner +
+          "/" +
+          CFG.repo +
+          "/main/docs/evaluation.json";
+
+        var SERIES = ["--series-1", "--series-2", "--series-3", "--series-4"];
+        var COMPETENCIES = [
+          { key: "git", label: "Git 사용법" },
+          { key: "harness", label: "하네스 엔지니어링" },
+          { key: "thinking", label: "에이전트 친화적 사고" },
+          { key: "comms", label: "협업 커뮤니케이션" },
+        ];
+        // GitHub Pages는 /docs를 사이트 루트로 서빙하므로 guide/ 폴더는 배포되지 않는다.
+        // 문서 링크는 반드시 레포의 절대 URL이어야 한다. (상대 경로는 404)
+        var REPO_URL = "https://github.com/" + CFG.owner + "/" + CFG.repo;
+        var FILE_URL = REPO_URL + "/blob/main/";
+
+        var DAYS = [
+          {
+            n: 1,
+            title: "혼자 끝까지 만들어보기",
+            desc: "스펙 잡기 → 구현 → 첫 PR 머지",
+            href: FILE_URL + "guide/DAY1.md",
+          },
+          {
+            n: 2,
+            title: "같이 만들며 부딪히기",
+            desc: "공동 작업 → 충돌 해결 → 교차 리뷰",
+            href: FILE_URL + "guide/DAY2.md",
+          },
+          {
+            n: 3,
+            title: "에이전트 환경 만들기",
+            desc: "CLAUDE.md 규칙 → 스킬 → 회고",
+            href: FILE_URL + "guide/DAY3.md",
+          },
+        ];
+        var HELP_LINKS = [
+          { label: "Git 치트시트", href: FILE_URL + "guide/GIT-CHEATSHEET.md" },
+          { label: "복붙용 프롬프트", href: FILE_URL + "guide/PROMPTS.md" },
+          {
+            label: "내 진도 체크리스트",
+            href: REPO_URL + "/issues?q=is%3Aissue+label%3Aprogress",
+          },
+          { label: "가이드용 안내", href: FILE_URL + "guide/가이드용.md" },
+        ];
+
+        var state = { data: null, token: "", lastFetch: 0 };
+
+        /* ---------- helpers ---------- */
+        function el(id) {
+          return document.getElementById(id);
+        }
+        function esc(s) {
+          return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+            return {
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c];
+          });
+        }
+        function clamp(n) {
+          return Math.max(0, Math.min(100, Math.round(n)));
+        }
+
+        function headers() {
+          var h = { Accept: "application/vnd.github+json" };
+          if (state.token) h.Authorization = "Bearer " + state.token;
+          return h;
+        }
+
+        function notice(kind, html) {
+          var d = document.createElement("div");
+          d.className = "notice " + kind;
+          d.innerHTML = html;
+          el("notices").appendChild(d);
+        }
+
+        function ghJSON(path) {
+          return fetch(API + path, { headers: headers() }).then(function (r) {
+            if (r.status === 403 || r.status === 429) {
+              var e = new Error("rate");
+              e.rate = true;
+              throw e;
+            }
+            if (r.status === 404) return null;
+            if (!r.ok) throw new Error("GitHub " + r.status);
+            return r.json();
+          });
+        }
+
+        /* ---------- member matching ---------- */
+        function matcher(members) {
+          var byKey = {};
+          members.forEach(function (m) {
+            byKey[m.login.toLowerCase()] = m.login;
+            byKey[m.name.toLowerCase()] = m.login;
+            (m.aliases || []).forEach(function (a) {
+              byKey[String(a).toLowerCase()] = m.login;
+            });
+          });
+          return function (login, name, email) {
+            var keys = [login, name, email && String(email).split("@")[0]];
+            for (var i = 0; i < keys.length; i++) {
+              var k = keys[i] && String(keys[i]).toLowerCase();
+              if (k && byKey[k]) return byKey[k];
+            }
+            return null;
           };
         }
-        return base;
-      });
-      members.forEach(function (m) { m.scores = score(m); });
-      return { members: members, fetchedAt: new Date(), source: "snapshot", generatedAt: snap.generatedAt };
-    }).catch(function () { return null; });
-  }
 
-  function loadLive() {
-    el("notices").innerHTML = "";
-    var members = CFG.members.map(blankMember);
-    var byLogin = {};
-    members.forEach(function (m) { byLogin[m.login] = m; });
-    var match = matcher(CFG.members);
-
-    return Promise.all([
-      pageAll("/commits?per_page=100"),
-      pageAll("/pulls?state=all&per_page=100"),
-      pageAll("/pulls/comments?per_page=100"),
-      pageAll("/issues?state=all&per_page=100"),
-      pageAll("/issues/comments?per_page=100"),
-      ghJSON("/git/trees/main?recursive=1"),
-      pageAll("/commits?path=CLAUDE.md&per_page=100"),
-      pageAll("/commits?path=.claude&per_page=100")
-    ]).then(function (res) {
-      var commits = res[0], pulls = res[1], prComments = res[2],
-          issues = res[3], isComments = res[4], tree = res[5],
-          claudeMd = res[6], skills = res[7];
-
-      function whoCommit(c) {
-        return match(c.author && c.author.login,
-                     c.commit && c.commit.author && c.commit.author.name,
-                     c.commit && c.commit.author && c.commit.author.email);
-      }
-      function touch(m, iso) {
-        if (!iso) return;
-        if (!m.lastActivity || iso > m.lastActivity) m.lastActivity = iso;
-      }
-
-      commits.forEach(function (c) {
-        var who = whoCommit(c); if (!who) return;
-        var m = byLogin[who];
-        m.commits++;
-        if (c.parents && c.parents.length > 1) m.mergeCommits++;
-        touch(m, c.commit.author.date);
-      });
-      claudeMd.forEach(function (c) { var w = whoCommit(c); if (w) byLogin[w].claudeMdCommits++; });
-      skills.forEach(function (c) { var w = whoCommit(c); if (w) byLogin[w].skillCommits++; });
-
-      pulls.forEach(function (p) {
-        var who = match(p.user && p.user.login); if (!who) return;
-        var m = byLogin[who];
-        m.prsOpened++;
-        if (p.merged_at) m.prsMerged++;
-        touch(m, p.updated_at);
-        var body = p.body || "";
-        var q = 0;
-        if (/왜|이유|because|의도/.test(body) && body.replace(/\s/g, "").length > 120) q = 1;
-        if (q === 1 && /배운|learn|다음엔|느낀/.test(body)) q = 2;
-        if (q > m.prBodyQuality) m.prBodyQuality = q;
-      });
-
-      var prAuthorByNumber = {};
-      pulls.forEach(function (p) { prAuthorByNumber[p.number] = p.user && p.user.login; });
-
-      prComments.forEach(function (c) {
-        var who = match(c.user && c.user.login); if (!who) return;
-        var num = (c.pull_request_url || "").split("/").pop();
-        var authorLogin = prAuthorByNumber[num];
-        var authorKey = authorLogin ? match(authorLogin) : null;
-        if (authorKey === who) return;         // 자기 PR에 단 코멘트는 리뷰로 세지 않음
-        byLogin[who].reviewsGiven++;
-        touch(byLogin[who], c.created_at);
-      });
-
-      isComments.forEach(function (c) {
-        var who = match(c.user && c.user.login); if (!who) return;
-        if (c.html_url && c.html_url.indexOf("/pull/") !== -1) {
-          var n = (c.issue_url || "").split("/").pop();
-          var a = prAuthorByNumber[n] ? match(prAuthorByNumber[n]) : null;
-          if (a && a !== who) byLogin[who].reviewsGiven++;
+        /* ---------- checklist parsing ---------- */
+        function parseChecklist(body) {
+          var out = {
+            1: { done: 0, total: 0 },
+            2: { done: 0, total: 0 },
+            3: { done: 0, total: 0 },
+            items: {},
+          };
+          if (!body) return out;
+          var day = 0;
+          body.split(/\r?\n/).forEach(function (line) {
+            var h = line.match(/^#{2,4}\s*Day\s*([123])/i);
+            if (h) {
+              day = Number(h[1]);
+              return;
+            }
+            var c = line.match(/^\s*[-*]\s*\[( |x|X)\]\s*(.+)$/);
+            if (c && day) {
+              var done = c[1].toLowerCase() === "x";
+              out[day].total++;
+              if (done) out[day].done++;
+              out.items[c[2].trim()] = done;
+            }
+          });
+          return out;
         }
-        byLogin[who].issueActivity++;
-        touch(byLogin[who], c.created_at);
-      });
-
-      issues.forEach(function (it) {
-        if (it.pull_request) return;
-        var who = match(it.user && it.user.login);
-        var titleTarget = null;
-        var tm = (it.title || "").match(/\[진도\]\s*(\S+)/);
-        if (tm) titleTarget = match(tm[1]);
-        if (titleTarget && byLogin[titleTarget]) {
-          byLogin[titleTarget].checklist = parseChecklist(it.body);
-          byLogin[titleTarget].issueUrl = it.html_url;
+        function checked(cl, kw) {
+          var keys = Object.keys(cl.items);
+          for (var i = 0; i < keys.length; i++) {
+            if (keys[i].indexOf(kw) !== -1 && cl.items[keys[i]]) return true;
+          }
+          return false;
         }
-        if (who) { byLogin[who].issueActivity++; touch(byLogin[who], it.updated_at); }
-      });
 
-      if (tree && tree.tree) {
-        tree.tree.forEach(function (n) {
-          var mm = n.path.match(/^sandbox\/([^/]+)\//);
-          if (!mm) return;
-          var who = match(mm[1]);
-          if (!who) return;
-          if (/\/SPEC\.md$/i.test(n.path)) byLogin[who].hasSpec = true;
-          var folder = "sandbox/" + mm[1];
-          if (byLogin[who].folders.indexOf(folder) === -1) byLogin[who].folders.push(folder);
-        });
-      }
+        /* ---------- scoring ---------- */
+        function score(m, d) {
+          var cl = m.checklist;
+          var git = 0;
+          if (m.commits > 0) git += 25;
+          if (m.prsOpened > 0) git += 25;
+          if (m.prsMerged > 0) git += 25;
+          if (m.mergeCommits > 0 || checked(cl, "conflict")) git += 25;
 
-      members.forEach(function (m) { m.scores = score(m); });
-      return { members: members, fetchedAt: new Date(), source: "live" };
-    });
-  }
+          var harness = 0;
+          if (m.claudeMdCommits > 0) harness += 40;
+          if (m.skillCommits > 0) harness += 40;
+          if (checked(cl, "서브에이전트")) harness += 20;
 
-  // 스냅샷이 있으면 그걸 쓰고, 없을 때만 GitHub API를 직접 호출한다.
-  function load() {
-    return loadSnapshot().then(function (snap) {
-      if (snap) return snap;
-      return loadLive();
-    });
-  }
+          var thinking = 0;
+          if (m.hasSpec) thinking += 40;
+          if (m.prBodyQuality >= 1) thinking += 30;
+          if (m.commits >= 3) thinking += 30;
 
-  function loadEval() {
-    // 같은 폴더에 있으면 그걸 쓰고, 아니면(로컬에서 파일로 열었을 때 등) raw URL로 받는다.
-    return fetch("./evaluation.json?t=" + Date.now()).then(function (r) {
-      if (r.ok) return r.json();
-      throw new Error("no local");
-    }).catch(function () {
-      return fetch(RAW + "?t=" + Date.now())
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .catch(function () { return null; });
-    }).then(function (d) {
-      return (d && (d.summary || (d.members || []).length)) ? d : null;
-    });
-  }
+          var comms = 0;
+          if (m.reviewsGiven > 0) comms += 40;
+          if (m.issueActivity > 0) comms += 30;
+          if (m.prBodyQuality >= 2) comms += 30;
 
-  /* ---------- 페이스 ---------- */
-  // 역량 점수는 "PR 하나 머지 + 충돌 한 번"이면 금방 포화되므로,
-  // 페이스 판정에는 체크리스트 진행률을 절반 섞어 해상도를 높인다.
-  // 아래 값은 각 Day가 끝난 시점의 기대 blended 값.
-  var MILESTONES = [0, 48, 73, 100];
-  var DAY_START = 9.5, DAY_END = 17.5;
+          return {
+            git: clamp(git),
+            harness: clamp(harness),
+            thinking: clamp(thinking),
+            comms: clamp(comms),
+          };
+        }
 
-  function blendedProgress(m) {
-    var s = m.scores;
-    var comp = clamp((s.git + s.harness + s.thinking + s.comms) / 4);
-    var done = 0, total = 0;
-    [1, 2, 3].forEach(function (d) {
-      done += m.checklist[d].done;
-      total += m.checklist[d].total;
-    });
-    if (!total) return comp;                    // 진도 이슈가 아직 없으면 역량만으로
-    return clamp((comp + (done / total) * 100) / 2);
-  }
+        /* ---------- load ---------- */
+        function pageAll(path) {
+          // one page of 100 is enough for a 3-day course; keeps the rate limit low
+          return ghJSON(path).then(function (r) {
+            return r || [];
+          });
+        }
 
-  function coursePosition() {
-    if (!CFG.startDate) return { day: 1, elapsed: 0, raw: 0 };
-    var start = new Date(CFG.startDate + "T00:00:00");
-    var now = new Date();
-    var dayIdx = Math.floor((now - start) / 86400000);            // 0-based
-    var h = now.getHours() + now.getMinutes() / 60;
-    var frac = Math.max(0, Math.min(1, (h - DAY_START) / (DAY_END - DAY_START)));
-    var c = Math.max(0, Math.min(2, dayIdx));
-    return { day: c + 1, elapsed: Math.max(0, Math.min(3, c + frac)), raw: dayIdx };
-  }
+        function blankMember(m) {
+          return Object.assign({}, m, {
+            commits: 0,
+            mergeCommits: 0,
+            prsOpened: 0,
+            prsMerged: 0,
+            reviewsGiven: 0,
+            issueActivity: 0,
+            claudeMdCommits: 0,
+            skillCommits: 0,
+            hasSpec: false,
+            prBodyQuality: 0,
+            checklist: parseChecklist(""),
+            lastActivity: null,
+            folders: [],
+          });
+        }
 
-  function expectedScore(elapsed) {
-    var i = Math.floor(elapsed);
-    if (i >= 3) return MILESTONES[3];
-    return MILESTONES[i] + (MILESTONES[i + 1] - MILESTONES[i]) * (elapsed - i);
-  }
+        // 1순위: GitHub Actions가 만들어 둔 스냅샷. API 요청이 0회라 한도에 걸리지 않는다.
+        function loadSnapshot() {
+          return fetch("./activity.json?t=" + Date.now())
+            .then(function (r) {
+              if (!r.ok) return null;
+              return r.json();
+            })
+            .then(function (snap) {
+              if (!snap || !snap.people || !Object.keys(snap.people).length)
+                return null;
+              var members = CFG.members.map(function (m) {
+                var p = snap.people[m.login];
+                var base = blankMember(m);
+                if (!p) return base;
+                [
+                  "commits",
+                  "mergeCommits",
+                  "prsOpened",
+                  "prsMerged",
+                  "reviewsGiven",
+                  "claudeMdCommits",
+                  "skillCommits",
+                  "prBodyQuality",
+                ].forEach(function (k) {
+                  if (typeof p[k] === "number") base[k] = p[k];
+                });
+                base.hasSpec = !!p.hasSpec;
+                base.issueActivity =
+                  (p.issueComments || 0) + (p.issuesOpened || 0);
+                base.lastActivity = p.lastActivity || null;
+                base.issueUrl = p.issueUrl || null;
+                if (p.checklist) {
+                  base.checklist = {
+                    1: {
+                      done: (p.checklist["1"] || [0, 0])[0],
+                      total: (p.checklist["1"] || [0, 0])[1],
+                    },
+                    2: {
+                      done: (p.checklist["2"] || [0, 0])[0],
+                      total: (p.checklist["2"] || [0, 0])[1],
+                    },
+                    3: {
+                      done: (p.checklist["3"] || [0, 0])[0],
+                      total: (p.checklist["3"] || [0, 0])[1],
+                    },
+                    items: p.checklistItems || {},
+                  };
+                }
+                return base;
+              });
+              members.forEach(function (m) {
+                m.scores = score(m);
+              });
+              return {
+                members: members,
+                fetchedAt: new Date(),
+                source: "snapshot",
+                generatedAt: snap.generatedAt,
+              };
+            })
+            .catch(function () {
+              return null;
+            });
+        }
 
-  function pace(m) {
-    var pos = coursePosition();
-    if (pos.elapsed < 0.2) return null;          // 시작 직후에는 판정하지 않는다
-    var d = Math.round(blendedProgress(m) - expectedScore(pos.elapsed));
-    if (d >= 15) return { key: "fast", label: "예상보다 빠름", icon: "▲", delta: d };
-    if (d <= -15) return { key: "slow", label: "예상보다 느림", icon: "▼", delta: d };
-    return { key: "ontrack", label: "정상 속도", icon: "●", delta: d };
-  }
+        function loadLive() {
+          el("notices").innerHTML = "";
+          var members = CFG.members.map(blankMember);
+          var byLogin = {};
+          members.forEach(function (m) {
+            byLogin[m.login] = m;
+          });
+          var match = matcher(CFG.members);
 
-  /* ---------- render ---------- */
-  function currentDay() { return coursePosition().day; }
+          return Promise.all([
+            pageAll("/commits?per_page=100"),
+            pageAll("/pulls?state=all&per_page=100"),
+            pageAll("/pulls/comments?per_page=100"),
+            pageAll("/issues?state=all&per_page=100"),
+            pageAll("/issues/comments?per_page=100"),
+            ghJSON("/git/trees/main?recursive=1"),
+            pageAll("/commits?path=CLAUDE.md&per_page=100"),
+            pageAll("/commits?path=.claude&per_page=100"),
+          ]).then(function (res) {
+            var commits = res[0],
+              pulls = res[1],
+              prComments = res[2],
+              issues = res[3],
+              isComments = res[4],
+              tree = res[5],
+              claudeMd = res[6],
+              skills = res[7];
 
-  function renderDays() {
-    var d = currentDay();
-    el("days").innerHTML = DAYS.map(function (x) {
-      return '<a class="day' + (x.n === d ? " now" : "") + '" href="' + x.href + '" target="_blank" rel="noopener">' +
-        '<div class="d-tag">Day ' + x.n + (x.n === d ? " · 오늘" : "") + '</div>' +
-        '<div class="d-title">' + esc(x.title) + '</div>' +
-        '<div class="d-desc">' + esc(x.desc) + '</div></a>';
-    }).join("");
-    el("help-links").innerHTML = HELP_LINKS.map(function (h) {
-      return '<a class="btn" href="' + h.href + '" target="_blank" rel="noopener">' + esc(h.label) + " ↗</a>";
-    }).join("");
-  }
+            function whoCommit(c) {
+              return match(
+                c.author && c.author.login,
+                c.commit && c.commit.author && c.commit.author.name,
+                c.commit && c.commit.author && c.commit.author.email,
+              );
+            }
+            function touch(m, iso) {
+              if (!iso) return;
+              if (!m.lastActivity || iso > m.lastActivity) m.lastActivity = iso;
+            }
 
-  function meter(name, colorVar, val) {
-    return '<div class="meter">' +
-      '<div class="meter-top">' +
-        '<span class="meter-name"><span class="swatch" style="background:var(' + colorVar + ')"></span>' + esc(name) + '</span>' +
-        '<span class="meter-val">' + val + '%</span>' +
-      '</div>' +
-      '<div class="track"><div class="fill" data-v="' + val + '" style="width:' + val + '%;background:var(' + colorVar + ')"></div></div>' +
-    '</div>';
-  }
+            commits.forEach(function (c) {
+              var who = whoCommit(c);
+              if (!who) return;
+              var m = byLogin[who];
+              m.commits++;
+              if (c.parents && c.parents.length > 1) m.mergeCommits++;
+              touch(m, c.commit.author.date);
+            });
+            claudeMd.forEach(function (c) {
+              var w = whoCommit(c);
+              if (w) byLogin[w].claudeMdCommits++;
+            });
+            skills.forEach(function (c) {
+              var w = whoCommit(c);
+              if (w) byLogin[w].skillCommits++;
+            });
 
-  function gateBadges(m) {
-    var cl = m.checklist;
-    var out = [];
-    [1, 2, 3].forEach(function (d) {
-      var t = cl[d].total, done = cl[d].done;
-      var cls = "wip", icon = "◔", txt = "Day " + d + " 진행 중";
-      if (t > 0 && done === t) { cls = "done"; icon = "✓"; txt = "Day " + d + " 완료"; }
-      else if (t > 0 && done === 0) { cls = "miss"; icon = "○"; txt = "Day " + d + " 시작 전"; }
-      else if (t > 0) { txt = "Day " + d + " " + done + "/" + t; }
-      else { txt = "Day " + d + " 기록 없음"; cls = "miss"; icon = "○"; }
-      out.push('<span class="badge ' + cls + '">' + icon + " " + esc(txt) + "</span>");
-    });
-    return out.join("");
-  }
+            pulls.forEach(function (p) {
+              var who = match(p.user && p.user.login);
+              if (!who) return;
+              var m = byLogin[who];
+              m.prsOpened++;
+              if (p.merged_at) m.prsMerged++;
+              touch(m, p.updated_at);
+              var body = p.body || "";
+              var q = 0;
+              if (
+                /왜|이유|because|의도/.test(body) &&
+                body.replace(/\s/g, "").length > 120
+              )
+                q = 1;
+              if (q === 1 && /배운|learn|다음엔|느낀/.test(body)) q = 2;
+              if (q > m.prBodyQuality) m.prBodyQuality = q;
+            });
 
-  function renderMembers(data, evalData) {
-    var learners = data.members.filter(function (m) { return m.role === "learner"; });
-    var pool = learners.length ? learners : data.members;
+            var prAuthorByNumber = {};
+            pulls.forEach(function (p) {
+              prAuthorByNumber[p.number] = p.user && p.user.login;
+            });
 
-    var avg = pool.reduce(function (a, m) {
-      return a + (m.scores.git + m.scores.harness + m.scores.thinking + m.scores.comms) / 4;
-    }, 0) / (pool.length || 1);
-    el("hero").textContent = clamp(avg) + "%";
+            prComments.forEach(function (c) {
+              var who = match(c.user && c.user.login);
+              if (!who) return;
+              var num = (c.pull_request_url || "").split("/").pop();
+              var authorLogin = prAuthorByNumber[num];
+              var authorKey = authorLogin ? match(authorLogin) : null;
+              if (authorKey === who) return; // 자기 PR에 단 코멘트는 리뷰로 세지 않음
+              byLogin[who].reviewsGiven++;
+              touch(byLogin[who], c.created_at);
+            });
 
-    var sum = function (k) { return data.members.reduce(function (a, m) { return a + m[k]; }, 0); };
-    var conflicts = data.members.filter(function (m) {
-      return m.mergeCommits > 0 || checked(m.checklist, "conflict"); }).length;
+            isComments.forEach(function (c) {
+              var who = match(c.user && c.user.login);
+              if (!who) return;
+              if (c.html_url && c.html_url.indexOf("/pull/") !== -1) {
+                var n = (c.issue_url || "").split("/").pop();
+                var a = prAuthorByNumber[n] ? match(prAuthorByNumber[n]) : null;
+                if (a && a !== who) byLogin[who].reviewsGiven++;
+              }
+              byLogin[who].issueActivity++;
+              touch(byLogin[who], c.created_at);
+            });
 
-    var tiles = [
-      { l: "커밋", v: sum("commits"), n: "전체 팀" },
-      { l: "머지된 PR", v: sum("prsMerged"), n: sum("prsOpened") + "개 중" },
-      { l: "리뷰 코멘트", v: sum("reviewsGiven"), n: "남의 PR에 남긴 것" },
-      { l: "충돌 해결 경험", v: conflicts + "명", n: pool.length + "명 중 (학습 대상)" }
-    ];
-    el("tiles").innerHTML = tiles.map(function (t) {
-      return '<div class="tile"><div class="t-label">' + esc(t.l) + '</div>' +
-        '<div class="t-value">' + esc(t.v) + '</div><div class="t-note">' + esc(t.n) + '</div></div>';
-    }).join("");
+            issues.forEach(function (it) {
+              if (it.pull_request) return;
+              var who = match(it.user && it.user.login);
+              var titleTarget = null;
+              var tm = (it.title || "").match(/\[진도\]\s*(\S+)/);
+              if (tm) titleTarget = match(tm[1]);
+              if (titleTarget && byLogin[titleTarget]) {
+                byLogin[titleTarget].checklist = parseChecklist(it.body);
+                byLogin[titleTarget].issueUrl = it.html_url;
+              }
+              if (who) {
+                byLogin[who].issueActivity++;
+                touch(byLogin[who], it.updated_at);
+              }
+            });
 
-    var evalByLogin = {};
-    if (evalData && evalData.members) {
-      evalData.members.forEach(function (e) { evalByLogin[e.login] = e; });
-    }
+            if (tree && tree.tree) {
+              tree.tree.forEach(function (n) {
+                var mm = n.path.match(/^sandbox\/([^/]+)\//);
+                if (!mm) return;
+                var who = match(mm[1]);
+                if (!who) return;
+                if (/\/SPEC\.md$/i.test(n.path)) byLogin[who].hasSpec = true;
+                var folder = "sandbox/" + mm[1];
+                if (byLogin[who].folders.indexOf(folder) === -1)
+                  byLogin[who].folders.push(folder);
+              });
+            }
 
-    // 일정 조정 권고 — 학습자 3명의 페이스를 종합해서
-    var paces = pool.map(pace).filter(Boolean);
-    if (paces.length) {
-      var slow = paces.filter(function (p) { return p.key === "slow"; }).length;
-      var fast = paces.filter(function (p) { return p.key === "fast"; }).length;
-      if (slow >= 2) {
-        notice("warn", "<b>일정 조정 제안 · 늦추기</b> — " + slow + "명이 예상보다 뒤처져 있습니다. " +
-          "다음 Day로 넘어가기 전에 반나절 보강을 넣는 편이 낫습니다. 진도를 밀면 다음 단계가 더 어려워집니다.");
-      } else if (fast === paces.length) {
-        notice("", "<b>일정 조정 제안 · 당기기</b> — 세 명 모두 예상보다 앞서 있습니다. " +
-          "오늘 남은 시간에 다음 Day 과제를 미리 시작하거나, 마지막 날을 반나절로 줄여도 됩니다.");
-      } else if (slow === 1) {
-        notice("", "<b>일정 조정 제안 · 개별 보강</b> — 한 명만 뒤처져 있습니다. " +
-          "전체 일정은 유지하고, 그 사람만 가이드가 붙어 따라잡게 하는 편이 효율적입니다.");
-      }
-    }
+            members.forEach(function (m) {
+              m.scores = score(m);
+            });
+            return { members: members, fetchedAt: new Date(), source: "live" };
+          });
+        }
 
-    el("members").innerHTML = data.members.map(function (m) {
-      var s = m.scores;
-      var overall = clamp((s.git + s.harness + s.thinking + s.comms) / 4);
-      var ev = evalByLogin[m.login];
-      var last = m.lastActivity
-        ? new Date(m.lastActivity).toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" })
-        : "활동 없음";
-      var head = '<div class="m-head">' +
-        '<img class="m-avatar" alt="" src="https://github.com/' + esc(m.login) + '.png?size=80" onerror="this.style.visibility=\'hidden\'">' +
-        '<div><div class="m-name">' + esc(m.name) + (m.role === "guide" ? " · 가이드" : "") + "</div>" +
-        '<div class="m-login">@' + esc(m.login) + " · " + esc(last) + "</div></div>";
+        // 스냅샷이 있으면 그걸 쓰고, 없을 때만 GitHub API를 직접 호출한다.
+        function load() {
+          return loadSnapshot().then(function (snap) {
+            if (snap) return snap;
+            return loadLive();
+          });
+        }
 
-      // 가이드가 실습을 건너뛰는 경우: 역량 미터 대신 팀을 얼마나 도왔는지를 보여준다
-      if (m.role === "guide" && m.skip) {
-        return '<div class="card guide-card">' +
-          head + '<div class="m-overall"><span class="badge">실습 면제</span></div></div>' +
-          '<div class="guide-stats">' +
-            '<div><div class="g-v">' + m.reviewsGiven + "</div><div class=\"g-l\">리뷰 코멘트</div></div>" +
-            '<div><div class="g-v">' + m.issueActivity + "</div><div class=\"g-l\">이슈 활동</div></div>" +
-            '<div><div class="g-v">' + m.commits + "</div><div class=\"g-l\">커밋</div></div>" +
-          "</div>" +
-          '<div class="m-note">가이드 역할입니다. 진도 측정과 팀 전체 진도 계산에서 제외됩니다. ' +
-          '직접 참여하려면 <code>docs/index.html</code>에서 <code>"skip": false</code>로 바꾸세요.</div>' +
-        "</div>";
-      }
+        function loadEval() {
+          // 같은 폴더에 있으면 그걸 쓰고, 아니면(로컬에서 파일로 열었을 때 등) raw URL로 받는다.
+          return fetch("./evaluation.json?t=" + Date.now())
+            .then(function (r) {
+              if (r.ok) return r.json();
+              throw new Error("no local");
+            })
+            .catch(function () {
+              return fetch(RAW + "?t=" + Date.now())
+                .then(function (r) {
+                  return r.ok ? r.json() : null;
+                })
+                .catch(function () {
+                  return null;
+                });
+            })
+            .then(function (d) {
+              return d && (d.summary || (d.members || []).length) ? d : null;
+            });
+        }
 
-      var p = m.role === "learner" ? pace(m) : null;
-      var paceHtml = p ? '<span class="pace ' + p.key + '">' + p.icon + " " + esc(p.label) +
-        (p.delta ? " (" + (p.delta > 0 ? "+" : "") + p.delta + ")" : "") + "</span>" : "";
-      var note = "";
-      if (ev && (ev.status || ev.next)) {
-        note = '<div class="m-note">' +
-          (ev.status ? esc(ev.status) : "") +
-          (ev.next ? '<div class="eval-next"><b>다음:</b> ' + esc(ev.next) + "</div>" : "") +
-        "</div>";
-      }
+        /* ---------- 페이스 ---------- */
+        // 역량 점수는 "PR 하나 머지 + 충돌 한 번"이면 금방 포화되므로,
+        // 페이스 판정에는 체크리스트 진행률을 절반 섞어 해상도를 높인다.
+        // 아래 값은 각 Day가 끝난 시점의 기대 blended 값.
+        var MILESTONES = [0, 48, 73, 100];
+        var DAY_START = 9.5,
+          DAY_END = 17.5;
 
-      return '<div class="card">' +
-        head + '<div class="m-overall"><div class="pct">' + overall + '%</div><div class="cap">종합</div></div></div>' +
-        (paceHtml ? '<div class="pace-row">' + paceHtml + "</div>" : "") +
-        COMPETENCIES.map(function (c, i) { return meter(c.label, SERIES[i], s[c.key]); }).join("") +
-        '<div class="badges">' + gateBadges(m) + "</div>" +
-        note +
-      "</div>";
-    }).join("");
+        function blendedProgress(m) {
+          var s = m.scores;
+          var comp = clamp((s.git + s.harness + s.thinking + s.comms) / 4);
+          var done = 0,
+            total = 0;
+          [1, 2, 3].forEach(function (d) {
+            done += m.checklist[d].done;
+            total += m.checklist[d].total;
+          });
+          if (!total) return comp; // 진도 이슈가 아직 없으면 역량만으로
+          return clamp((comp + (done / total) * 100) / 2);
+        }
 
-    // table view
-    var rows = data.members.map(function (m) {
-      var exempt = m.role === "guide" && m.skip;
-      return "<tr><td>" + esc(m.name) + (exempt ? ' <span class="m-login">(실습 면제)</span>' : "") + "</td>" +
-        COMPETENCIES.map(function (c) {
-          return '<td class="num">' + (exempt ? "—" : m.scores[c.key] + "%") + "</td>"; }).join("") +
-        '<td class="num">' + m.commits + "</td>" +
-        '<td class="num">' + m.prsMerged + "/" + m.prsOpened + "</td>" +
-        '<td class="num">' + m.reviewsGiven + "</td>" +
-        '<td class="num">' + (m.mergeCommits > 0 || checked(m.checklist, "conflict") ? "있음" : "없음") + "</td></tr>";
-    }).join("");
-    el("data-table").innerHTML =
-      "<thead><tr><th>팀원</th>" +
-      COMPETENCIES.map(function (c) { return '<th class="num">' + esc(c.label) + "</th>"; }).join("") +
-      '<th class="num">커밋</th><th class="num">PR(머지/전체)</th><th class="num">리뷰</th><th class="num">충돌 해결</th></tr></thead><tbody>' +
-      rows + "</tbody>";
+        function coursePosition() {
+          if (!CFG.startDate) return { day: 1, elapsed: 0, raw: 0 };
+          var start = new Date(CFG.startDate + "T00:00:00");
+          var now = new Date();
+          var dayIdx = Math.floor((now - start) / 86400000); // 0-based
+          var h = now.getHours() + now.getMinutes() / 60;
+          var frac = Math.max(
+            0,
+            Math.min(1, (h - DAY_START) / (DAY_END - DAY_START)),
+          );
+          var c = Math.max(0, Math.min(2, dayIdx));
+          return {
+            day: c + 1,
+            elapsed: Math.max(0, Math.min(3, c + frac)),
+            raw: dayIdx,
+          };
+        }
 
-    // evaluation panel
-    if (evalData) {
-      var head = evalData.summary
-        ? '<div class="eval-item"><div class="eval-who">전체 요약</div><div class="eval-body">' + esc(evalData.summary) + "</div></div>"
-        : "";
-      var items = (evalData.members || []).map(function (e) {
-        var mm = data.members.filter(function (x) { return x.login === e.login; })[0];
-        return '<div class="eval-item"><div class="eval-who">' + esc(mm ? mm.name : e.login) + "</div>" +
-          '<div class="eval-body">' + esc(e.status || "") + "</div>" +
-          (e.next ? '<div class="eval-next"><b>다음:</b> ' + esc(e.next) + "</div>" : "") +
-        "</div>";
-      }).join("");
-      el("eval").innerHTML = head + items || '<p class="skeleton">아직 평가가 없습니다.</p>';
-      if (evalData.updatedAt) {
-        el("eval-sub").textContent = "마지막 평가: " + evalData.updatedAt + " · 하루 2회(점심·저녁) 갱신됩니다.";
-      }
-      if (evalData.verdict) {
-        notice("", "<b>진행 판단:</b> " + esc(evalData.verdict));
-      }
-    } else {
-      el("eval").innerHTML = '<p class="skeleton">아직 평가 파일이 없습니다. <code>docs/evaluation.json</code>이 갱신되면 여기 표시됩니다.</p>';
-    }
-  }
+        function expectedScore(elapsed) {
+          var i = Math.floor(elapsed);
+          if (i >= 3) return MILESTONES[3];
+          return (
+            MILESTONES[i] + (MILESTONES[i + 1] - MILESTONES[i]) * (elapsed - i)
+          );
+        }
 
-  /* ---------- boot ---------- */
-  function refresh() {
-    el("sub-line").textContent = "GitHub에서 활동을 읽는 중…";
-    Promise.all([load(), loadEval()]).then(function (r) {
-      renderMembers(r[0], r[1]);
-      el("sub-line").textContent = CFG.owner + "/" + CFG.repo + " · Day " + currentDay() + " 진행 중";
-      var stamp = "마지막 갱신 " + r[0].fetchedAt.toLocaleTimeString("ko-KR");
-      if (r[0].source === "snapshot" && r[0].generatedAt) {
-        stamp += " · 활동 수집 " + new Date(r[0].generatedAt).toLocaleString("ko-KR",
-          { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
-      } else if (r[0].source === "live") {
-        stamp += " · GitHub API 직접 조회 모드";
-        notice("", "<b>직접 조회 모드로 동작 중입니다.</b> 진도 스냅샷 워크플로우가 아직 돌지 않았거나 꺼져 있습니다. " +
-          "그대로 써도 되지만 GitHub의 시간당 조회 한도(IP당 60회)를 아끼려고 자동 새로고침 간격을 20분으로 늘렸습니다. " +
-          "지금 보려면 위 '새로고침'을 누르세요.");
-      }
-      el("updated").textContent = stamp;
-      schedule(r[0].source === "live" ? 20 * 60 * 1000 : 5 * 60 * 1000);
-    }).catch(function (e) {
-      if (e && e.rate) {
-        notice("warn", "<b>GitHub 요청 한도에 걸렸습니다.</b> 인증 없이는 시간당 60회까지만 조회할 수 있습니다. " +
-          "잠시 뒤 새로고침하거나, 관리자가 아래에 개인 액세스 토큰을 넣으면 한도가 올라갑니다 " +
-          "(브라우저 메모리에만 두며 어디에도 저장하지 않습니다).<br><br>" +
-          '<input id="tok" type="password" placeholder="github_pat_..." style="padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:var(--plane);color:inherit;font:inherit;font-size:13px;width:260px"> ' +
-          '<button id="tok-go" type="button">적용</button>');
-        var go = el("tok-go");
-        if (go) go.onclick = function () { state.token = el("tok").value.trim(); refresh(); };
-      } else {
-        notice("err", "<b>데이터를 불러오지 못했습니다.</b> " + esc(e.message) +
-          " — <code>docs/index.html</code>의 owner/repo 설정과 레포 공개 여부를 확인해 주세요.");
-      }
-      el("sub-line").textContent = "불러오기 실패";
-      schedule(10 * 60 * 1000);
-    });
-  }
+        function pace(m) {
+          var pos = coursePosition();
+          if (pos.elapsed < 0.2) return null; // 시작 직후에는 판정하지 않는다
+          var d = Math.round(blendedProgress(m) - expectedScore(pos.elapsed));
+          if (d >= 15)
+            return { key: "fast", label: "예상보다 빠름", icon: "▲", delta: d };
+          if (d <= -15)
+            return { key: "slow", label: "예상보다 느림", icon: "▼", delta: d };
+          return { key: "ontrack", label: "정상 속도", icon: "●", delta: d };
+        }
 
-  el("repo-link").href = "https://github.com/" + CFG.owner + "/" + CFG.repo;
-  el("btn-refresh").onclick = refresh;
-  el("btn-table").onclick = function () {
-    var t = el("table-view"), on = t.hasAttribute("hidden");
-    if (on) { t.removeAttribute("hidden"); } else { t.setAttribute("hidden", ""); }
-    this.setAttribute("aria-pressed", String(on));
-  };
-  el("btn-theme").onclick = function () {
-    var cur = document.documentElement.getAttribute("data-theme");
-    var dark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-    document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
-    this.textContent = dark ? "다크 모드" : "라이트 모드";
-  };
+        /* ---------- render ---------- */
+        function currentDay() {
+          return coursePosition().day;
+        }
 
-  // 다음 자동 새로고침 예약. 탭이 보이지 않으면 돌아올 때까지 미룬다 (조회 한도 절약).
-  var timer = null;
-  function schedule(ms) {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(function () {
-      if (document.hidden) {
-        document.addEventListener("visibilitychange", function once() {
-          document.removeEventListener("visibilitychange", once);
-          refresh();
-        });
-      } else {
+        function renderDays() {
+          var d = currentDay();
+          el("days").innerHTML = DAYS.map(function (x) {
+            return (
+              '<a class="day' +
+              (x.n === d ? " now" : "") +
+              '" href="' +
+              x.href +
+              '" target="_blank" rel="noopener">' +
+              '<div class="d-tag">Day ' +
+              x.n +
+              (x.n === d ? " · 오늘" : "") +
+              "</div>" +
+              '<div class="d-title">' +
+              esc(x.title) +
+              "</div>" +
+              '<div class="d-desc">' +
+              esc(x.desc) +
+              "</div></a>"
+            );
+          }).join("");
+          el("help-links").innerHTML = HELP_LINKS.map(function (h) {
+            return (
+              '<a class="btn" href="' +
+              h.href +
+              '" target="_blank" rel="noopener">' +
+              esc(h.label) +
+              " ↗</a>"
+            );
+          }).join("");
+        }
+
+        function meter(name, colorVar, val) {
+          return (
+            '<div class="meter">' +
+            '<div class="meter-top">' +
+            '<span class="meter-name"><span class="swatch" style="background:var(' +
+            colorVar +
+            ')"></span>' +
+            esc(name) +
+            "</span>" +
+            '<span class="meter-val">' +
+            val +
+            "%</span>" +
+            "</div>" +
+            '<div class="track"><div class="fill" data-v="' +
+            val +
+            '" style="width:' +
+            val +
+            "%;background:var(" +
+            colorVar +
+            ')"></div></div>' +
+            "</div>"
+          );
+        }
+
+        function gateBadges(m) {
+          var cl = m.checklist;
+          var out = [];
+          [1, 2, 3].forEach(function (d) {
+            var t = cl[d].total,
+              done = cl[d].done;
+            var cls = "wip",
+              icon = "◔",
+              txt = "Day " + d + " 진행 중";
+            if (t > 0 && done === t) {
+              cls = "done";
+              icon = "✓";
+              txt = "Day " + d + " 완료";
+            } else if (t > 0 && done === 0) {
+              cls = "miss";
+              icon = "○";
+              txt = "Day " + d + " 시작 전";
+            } else if (t > 0) {
+              txt = "Day " + d + " " + done + "/" + t;
+            } else {
+              txt = "Day " + d + " 기록 없음";
+              cls = "miss";
+              icon = "○";
+            }
+            out.push(
+              '<span class="badge ' +
+                cls +
+                '">' +
+                icon +
+                " " +
+                esc(txt) +
+                "</span>",
+            );
+          });
+          return out.join("");
+        }
+
+        function renderMembers(data, evalData) {
+          var learners = data.members.filter(function (m) {
+            return m.role === "learner";
+          });
+          var pool = learners.length ? learners : data.members;
+
+          var avg =
+            pool.reduce(function (a, m) {
+              return (
+                a +
+                (m.scores.git +
+                  m.scores.harness +
+                  m.scores.thinking +
+                  m.scores.comms) /
+                  4
+              );
+            }, 0) / (pool.length || 1);
+          el("hero").textContent = clamp(avg) + "%";
+
+          var sum = function (k) {
+            return data.members.reduce(function (a, m) {
+              return a + m[k];
+            }, 0);
+          };
+          var conflicts = data.members.filter(function (m) {
+            return m.mergeCommits > 0 || checked(m.checklist, "conflict");
+          }).length;
+
+          var tiles = [
+            { l: "커밋", v: sum("commits"), n: "전체 팀" },
+            {
+              l: "머지된 PR",
+              v: sum("prsMerged"),
+              n: sum("prsOpened") + "개 중",
+            },
+            {
+              l: "리뷰 코멘트",
+              v: sum("reviewsGiven"),
+              n: "남의 PR에 남긴 것",
+            },
+            {
+              l: "충돌 해결 경험",
+              v: conflicts + "명",
+              n: pool.length + "명 중 (학습 대상)",
+            },
+          ];
+          el("tiles").innerHTML = tiles
+            .map(function (t) {
+              return (
+                '<div class="tile"><div class="t-label">' +
+                esc(t.l) +
+                "</div>" +
+                '<div class="t-value">' +
+                esc(t.v) +
+                '</div><div class="t-note">' +
+                esc(t.n) +
+                "</div></div>"
+              );
+            })
+            .join("");
+
+          var evalByLogin = {};
+          if (evalData && evalData.members) {
+            evalData.members.forEach(function (e) {
+              evalByLogin[e.login] = e;
+            });
+          }
+
+          // 일정 조정 권고 — 학습자 3명의 페이스를 종합해서
+          var paces = pool.map(pace).filter(Boolean);
+          if (paces.length) {
+            var slow = paces.filter(function (p) {
+              return p.key === "slow";
+            }).length;
+            var fast = paces.filter(function (p) {
+              return p.key === "fast";
+            }).length;
+            if (slow >= 2) {
+              notice(
+                "warn",
+                "<b>일정 조정 제안 · 늦추기</b> — " +
+                  slow +
+                  "명이 예상보다 뒤처져 있습니다. " +
+                  "다음 Day로 넘어가기 전에 반나절 보강을 넣는 편이 낫습니다. 진도를 밀면 다음 단계가 더 어려워집니다.",
+              );
+            } else if (fast === paces.length) {
+              notice(
+                "",
+                "<b>일정 조정 제안 · 당기기</b> — 세 명 모두 예상보다 앞서 있습니다. " +
+                  "오늘 남은 시간에 다음 Day 과제를 미리 시작하거나, 마지막 날을 반나절로 줄여도 됩니다.",
+              );
+            } else if (slow === 1) {
+              notice(
+                "",
+                "<b>일정 조정 제안 · 개별 보강</b> — 한 명만 뒤처져 있습니다. " +
+                  "전체 일정은 유지하고, 그 사람만 가이드가 붙어 따라잡게 하는 편이 효율적입니다.",
+              );
+            }
+          }
+
+          el("members").innerHTML = data.members
+            .map(function (m) {
+              var s = m.scores;
+              var overall = clamp(
+                (s.git + s.harness + s.thinking + s.comms) / 4,
+              );
+              var ev = evalByLogin[m.login];
+              var last = m.lastActivity
+                ? new Date(m.lastActivity).toLocaleString("ko-KR", {
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : "활동 없음";
+              var head =
+                '<div class="m-head">' +
+                '<img class="m-avatar" alt="" src="https://github.com/' +
+                esc(m.login) +
+                '.png?size=80" onerror="this.style.visibility=\'hidden\'">' +
+                '<div><div class="m-name">' +
+                esc(m.name) +
+                (m.role === "guide" ? " · 가이드" : "") +
+                "</div>" +
+                '<div class="m-login">@' +
+                esc(m.login) +
+                " · " +
+                esc(last) +
+                "</div></div>";
+
+              // 가이드가 실습을 건너뛰는 경우: 역량 미터 대신 팀을 얼마나 도왔는지를 보여준다
+              if (m.role === "guide" && m.skip) {
+                return (
+                  '<div class="card guide-card">' +
+                  head +
+                  '<div class="m-overall"><span class="badge">실습 면제</span></div></div>' +
+                  '<div class="guide-stats">' +
+                  '<div><div class="g-v">' +
+                  m.reviewsGiven +
+                  '</div><div class="g-l">리뷰 코멘트</div></div>' +
+                  '<div><div class="g-v">' +
+                  m.issueActivity +
+                  '</div><div class="g-l">이슈 활동</div></div>' +
+                  '<div><div class="g-v">' +
+                  m.commits +
+                  '</div><div class="g-l">커밋</div></div>' +
+                  "</div>" +
+                  '<div class="m-note">가이드 역할입니다. 진도 측정과 팀 전체 진도 계산에서 제외됩니다. ' +
+                  '직접 참여하려면 <code>docs/index.html</code>에서 <code>"skip": false</code>로 바꾸세요.</div>' +
+                  "</div>"
+                );
+              }
+
+              var p = m.role === "learner" ? pace(m) : null;
+              var paceHtml = p
+                ? '<span class="pace ' +
+                  p.key +
+                  '">' +
+                  p.icon +
+                  " " +
+                  esc(p.label) +
+                  (p.delta
+                    ? " (" + (p.delta > 0 ? "+" : "") + p.delta + ")"
+                    : "") +
+                  "</span>"
+                : "";
+              var note = "";
+              if (ev && (ev.status || ev.next)) {
+                note =
+                  '<div class="m-note">' +
+                  (ev.status ? esc(ev.status) : "") +
+                  (ev.next
+                    ? '<div class="eval-next"><b>다음:</b> ' +
+                      esc(ev.next) +
+                      "</div>"
+                    : "") +
+                  "</div>";
+              }
+
+              return (
+                '<div class="card">' +
+                head +
+                '<div class="m-overall"><div class="pct">' +
+                overall +
+                '%</div><div class="cap">종합</div></div></div>' +
+                (paceHtml
+                  ? '<div class="pace-row">' + paceHtml + "</div>"
+                  : "") +
+                COMPETENCIES.map(function (c, i) {
+                  return meter(c.label, SERIES[i], s[c.key]);
+                }).join("") +
+                '<div class="badges">' +
+                gateBadges(m) +
+                "</div>" +
+                note +
+                "</div>"
+              );
+            })
+            .join("");
+
+          // table view
+          var rows = data.members
+            .map(function (m) {
+              var exempt = m.role === "guide" && m.skip;
+              return (
+                "<tr><td>" +
+                esc(m.name) +
+                (exempt ? ' <span class="m-login">(실습 면제)</span>' : "") +
+                "</td>" +
+                COMPETENCIES.map(function (c) {
+                  return (
+                    '<td class="num">' +
+                    (exempt ? "—" : m.scores[c.key] + "%") +
+                    "</td>"
+                  );
+                }).join("") +
+                '<td class="num">' +
+                m.commits +
+                "</td>" +
+                '<td class="num">' +
+                m.prsMerged +
+                "/" +
+                m.prsOpened +
+                "</td>" +
+                '<td class="num">' +
+                m.reviewsGiven +
+                "</td>" +
+                '<td class="num">' +
+                (m.mergeCommits > 0 || checked(m.checklist, "conflict")
+                  ? "있음"
+                  : "없음") +
+                "</td></tr>"
+              );
+            })
+            .join("");
+          el("data-table").innerHTML =
+            "<thead><tr><th>팀원</th>" +
+            COMPETENCIES.map(function (c) {
+              return '<th class="num">' + esc(c.label) + "</th>";
+            }).join("") +
+            '<th class="num">커밋</th><th class="num">PR(머지/전체)</th><th class="num">리뷰</th><th class="num">충돌 해결</th></tr></thead><tbody>' +
+            rows +
+            "</tbody>";
+
+          // evaluation panel
+          if (evalData) {
+            var head = evalData.summary
+              ? '<div class="eval-item"><div class="eval-who">전체 요약</div><div class="eval-body">' +
+                esc(evalData.summary) +
+                "</div></div>"
+              : "";
+            var items = (evalData.members || [])
+              .map(function (e) {
+                var mm = data.members.filter(function (x) {
+                  return x.login === e.login;
+                })[0];
+                return (
+                  '<div class="eval-item"><div class="eval-who">' +
+                  esc(mm ? mm.name : e.login) +
+                  "</div>" +
+                  '<div class="eval-body">' +
+                  esc(e.status || "") +
+                  "</div>" +
+                  (e.next
+                    ? '<div class="eval-next"><b>다음:</b> ' +
+                      esc(e.next) +
+                      "</div>"
+                    : "") +
+                  "</div>"
+                );
+              })
+              .join("");
+            el("eval").innerHTML =
+              head + items || '<p class="skeleton">아직 평가가 없습니다.</p>';
+            if (evalData.updatedAt) {
+              el("eval-sub").textContent =
+                "마지막 평가: " +
+                evalData.updatedAt +
+                " · 하루 2회(점심·저녁) 갱신됩니다.";
+            }
+            if (evalData.verdict) {
+              notice("", "<b>진행 판단:</b> " + esc(evalData.verdict));
+            }
+          } else {
+            el("eval").innerHTML =
+              '<p class="skeleton">아직 평가 파일이 없습니다. <code>docs/evaluation.json</code>이 갱신되면 여기 표시됩니다.</p>';
+          }
+        }
+
+        /* ---------- boot ---------- */
+        function refresh() {
+          el("sub-line").textContent = "GitHub에서 활동을 읽는 중…";
+          Promise.all([load(), loadEval()])
+            .then(function (r) {
+              renderMembers(r[0], r[1]);
+              el("sub-line").textContent =
+                CFG.owner +
+                "/" +
+                CFG.repo +
+                " · Day " +
+                currentDay() +
+                " 진행 중";
+              var stamp =
+                "마지막 갱신 " + r[0].fetchedAt.toLocaleTimeString("ko-KR");
+              if (r[0].source === "snapshot" && r[0].generatedAt) {
+                stamp +=
+                  " · 활동 수집 " +
+                  new Date(r[0].generatedAt).toLocaleString("ko-KR", {
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+              } else if (r[0].source === "live") {
+                stamp += " · GitHub API 직접 조회 모드";
+                notice(
+                  "",
+                  "<b>직접 조회 모드로 동작 중입니다.</b> 진도 스냅샷 워크플로우가 아직 돌지 않았거나 꺼져 있습니다. " +
+                    "그대로 써도 되지만 GitHub의 시간당 조회 한도(IP당 60회)를 아끼려고 자동 새로고침 간격을 20분으로 늘렸습니다. " +
+                    "지금 보려면 위 '새로고침'을 누르세요.",
+                );
+              }
+              el("updated").textContent = stamp;
+              schedule(r[0].source === "live" ? 20 * 60 * 1000 : 5 * 60 * 1000);
+            })
+            .catch(function (e) {
+              if (e && e.rate) {
+                notice(
+                  "warn",
+                  "<b>GitHub 요청 한도에 걸렸습니다.</b> 인증 없이는 시간당 60회까지만 조회할 수 있습니다. " +
+                    "잠시 뒤 새로고침하거나, 관리자가 아래에 개인 액세스 토큰을 넣으면 한도가 올라갑니다 " +
+                    "(브라우저 메모리에만 두며 어디에도 저장하지 않습니다).<br><br>" +
+                    '<input id="tok" type="password" placeholder="github_pat_..." style="padding:6px 9px;border-radius:7px;border:1px solid var(--border);background:var(--plane);color:inherit;font:inherit;font-size:13px;width:260px"> ' +
+                    '<button id="tok-go" type="button">적용</button>',
+                );
+                var go = el("tok-go");
+                if (go)
+                  go.onclick = function () {
+                    state.token = el("tok").value.trim();
+                    refresh();
+                  };
+              } else {
+                notice(
+                  "err",
+                  "<b>데이터를 불러오지 못했습니다.</b> " +
+                    esc(e.message) +
+                    " — <code>docs/index.html</code>의 owner/repo 설정과 레포 공개 여부를 확인해 주세요.",
+                );
+              }
+              el("sub-line").textContent = "불러오기 실패";
+              schedule(10 * 60 * 1000);
+            });
+        }
+
+        el("repo-link").href =
+          "https://github.com/" + CFG.owner + "/" + CFG.repo;
+        el("btn-refresh").onclick = refresh;
+        el("btn-table").onclick = function () {
+          var t = el("table-view"),
+            on = t.hasAttribute("hidden");
+          if (on) {
+            t.removeAttribute("hidden");
+          } else {
+            t.setAttribute("hidden", "");
+          }
+          this.setAttribute("aria-pressed", String(on));
+        };
+        el("btn-theme").onclick = function () {
+          var cur = document.documentElement.getAttribute("data-theme");
+          var dark = cur
+            ? cur === "dark"
+            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.setAttribute(
+            "data-theme",
+            dark ? "light" : "dark",
+          );
+          this.textContent = dark ? "다크 모드" : "라이트 모드";
+        };
+
+        // 다음 자동 새로고침 예약. 탭이 보이지 않으면 돌아올 때까지 미룬다 (조회 한도 절약).
+        var timer = null;
+        function schedule(ms) {
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(function () {
+            if (document.hidden) {
+              document.addEventListener("visibilitychange", function once() {
+                document.removeEventListener("visibilitychange", once);
+                refresh();
+              });
+            } else {
+              refresh();
+            }
+          }, ms);
+        }
+
+        renderDays();
         refresh();
-      }
-    }, ms);
-  }
-
-  renderDays();
-  refresh();
-})();
-</script>
-</body>
+      })();
+    </script>
+  </body>
 </html>
