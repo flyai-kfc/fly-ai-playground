@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:35:41.809Z",
+  "generatedAt": "2026-07-28T01:44:24.360Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -8,7 +8,7 @@
       "role": "learner",
       "commits": 3,
       "mergeCommits": 0,
-      "prsOpened": 0,
+      "prsOpened": 1,
       "prsMerged": 0,
       "reviewsGiven": 0,
       "issueComments": 0,
@@ -16,8 +16,8 @@
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": false,
-      "prBodyQuality": 0,
-      "lastActivity": "2026-07-28T01:34:44Z",
+      "prBodyQuality": 2,
+      "lastActivity": "2026-07-28T01:44:06Z",
       "recentCommits": [
         {
           "message": "Merge pull request #7 from flyai-kfc/main",
