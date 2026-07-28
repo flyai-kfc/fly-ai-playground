@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:09:27.798Z",
+  "generatedAt": "2026-07-28T01:11:55.166Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -59,7 +59,7 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 6,
+      "commits": 7,
       "mergeCommits": 0,
       "prsOpened": 0,
       "prsMerged": 0,
@@ -70,8 +70,12 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-28T01:09:03Z",
+      "lastActivity": "2026-07-28T01:11:31Z",
       "recentCommits": [
+        {
+          "message": "feat: 한글 표 정렬, categories 명령, 날짜 검증 추가",
+          "date": "2026-07-28T01:11:31Z"
+        },
         {
           "message": "feat: 월별 통계 요약 추가",
           "date": "2026-07-28T01:09:03Z"
@@ -87,10 +91,6 @@
         {
           "message": "feat: JSON 파일 저장/불러오기 구현",
           "date": "2026-07-28T00:56:30Z"
-        },
-        {
-          "message": "feat: 가계부 CLI 명령어 뼈대 추가",
-          "date": "2026-07-28T00:52:57Z"
         }
       ],
       "checklist": {
