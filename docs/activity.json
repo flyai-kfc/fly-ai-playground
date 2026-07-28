@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:01:40.443Z",
+  "generatedAt": "2026-07-28T01:03:53.459Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -59,7 +59,7 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 4,
+      "commits": 5,
       "mergeCommits": 0,
       "prsOpened": 0,
       "prsMerged": 0,
@@ -70,8 +70,12 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-28T00:59:59Z",
+      "lastActivity": "2026-07-28T01:03:39Z",
       "recentCommits": [
+        {
+          "message": "feat: 카테고리·키워드·날짜 범위 검색 추가",
+          "date": "2026-07-28T01:03:39Z"
+        },
         {
           "message": "feat: 번호로 삭제/수정하는 기능 추가",
           "date": "2026-07-28T00:59:59Z"
