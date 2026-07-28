@@ -1,16 +1,56 @@
-"""가계부 CLI - 5단계: 통계 요약
+"""가계부 CLI
 
-data.json 파일에 기록을 쌓고, 번호로 지목해서 지우거나 고칩니다.
+터미널에서 지출을 기록하고 찾아보고 합계를 내는 개인 가계부.
+기록은 이 파일 옆의 data.json 에 저장된다.
 """
 
 import argparse
 import json
+import re
+import sys
+import unicodedata
 from datetime import date
 from pathlib import Path
 
 # 이 .py 파일이 있는 폴더 안의 data.json 을 가리킨다.
 # 이렇게 해두면 어느 폴더에서 실행하든 항상 같은 파일을 쓴다.
 DATA_FILE = Path(__file__).parent / "data.json"
+
+
+# ---------- 출력 도우미 ----------
+
+def width(text):
+    """터미널에서 이 문자열이 차지하는 칸 수.
+
+    한글·한자는 영문의 두 배 폭으로 그려지는데 파이썬은 한 글자로 세기 때문에,
+    len() 을 그대로 쓰면 표가 삐뚤어진다.
+    """
+    total = 0
+    for ch in str(text):
+        # 'W'(Wide), 'F'(Fullwidth) 는 두 칸을 차지한다
+        total += 2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
+    return total
+
+
+def pad(text, n, align="left"):
+    """폭 n 칸에 맞춰 공백을 채운다. 한글이 섞여도 맞는다."""
+    text = str(text)
+    space = " " * max(0, n - width(text))
+    return space + text if align == "right" else text + space
+
+
+DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def check_date(value):
+    """날짜 형식이 YYYY-MM-DD 인지 확인. 아니면 안내하고 종료."""
+    if value is None:
+        return None
+    if not DATE_PATTERN.match(value):
+        print(f"날짜 형식이 올바르지 않습니다: '{value}'")
+        print("  YYYY-MM-DD 형식으로 써 주세요. 예) 2026-07-28")
+        sys.exit(1)
+    return value
 
 
 # ---------- 저장소 다루기 ----------
@@ -40,9 +80,14 @@ def save_data(data):
 def cmd_add(args):
     data = load_data()
 
+    # 오타로 카테고리가 갈라지는 걸 줄이려고, 이미 쓰던 목록을 먼저 보여준다
+    existing = sorted({r["category"] for r in data["records"]})
+    if existing:
+        print("기존 카테고리: " + ", ".join(existing))
+
     record = {
         "id": data["next_id"],
-        "date": args.date or date.today().isoformat(),
+        "date": check_date(args.date) or date.today().isoformat(),
         "amount": args.amount,
         "category": args.category,
         "memo": args.memo or "",
@@ -70,15 +115,22 @@ def print_table(records, empty_message="기록이 없습니다."):
     # 최신 날짜가 위로 오도록 정렬 (날짜가 같으면 나중에 넣은 게 위로)
     records = sorted(records, key=lambda r: (r["date"], r["id"]), reverse=True)
 
-    print(f"{'번호':>4}  {'날짜':<12} {'금액':>10}  {'카테고리':<10} 메모")
-    print("-" * 60)
-    for r in records:
-        print(f"{r['id']:>4}  {r['date']:<12} {r['amount']:>9,}원  "
-              f"{r['category']:<10} {r['memo']}")
-    print("-" * 60)
+    # 카테고리 열 폭은 가장 긴 카테고리에 맞춘다 (최소 8칸)
+    cat_w = max([8] + [width(r["category"]) for r in records])
 
+    print(pad("번호", 4, "right") + "  " + pad("날짜", 11) + " "
+          + pad("금액", 11, "right") + "  " + pad("카테고리", cat_w) + "  메모")
+    print("-" * (4 + 2 + 11 + 1 + 11 + 2 + cat_w + 2 + 12))
+
+    for r in records:
+        print(pad(r["id"], 4, "right") + "  " + pad(r["date"], 11) + " "
+              + pad(f"{r['amount']:,}원", 11, "right") + "  "
+              + pad(r["category"], cat_w) + "  " + r["memo"])
+
+    print("-" * (4 + 2 + 11 + 1 + 11 + 2 + cat_w + 2 + 12))
     total = sum(r["amount"] for r in records)
-    print(f"{'합계':>4}  {len(records)}건{'':<8} {total:>9,}원")
+    print(pad("합계", 4, "right") + "  " + pad(f"{len(records)}건", 11) + " "
+          + pad(f"{total:,}원", 11, "right"))
 
 
 def cmd_list(args):
@@ -169,7 +221,7 @@ def cmd_edit(args):
     changes = {
         "amount": args.amount,
         "category": args.category,
-        "date": args.date,
+        "date": check_date(args.date),
         "memo": args.memo,
     }
     given = {k: v for k, v in changes.items() if v is not None}
@@ -212,11 +264,14 @@ def cmd_stats(args):
     # 많이 쓴 카테고리가 위로 오게 정렬
     ordered = sorted(by_category.items(), key=lambda pair: pair[1], reverse=True)
 
+    cat_w = max([8] + [width(c) for c, _ in ordered])
+
     print()
     for category, amount in ordered:
         share = amount / total * 100
         bar = "█" * round(share / 5)   # 5%당 한 칸
-        print(f"  {category:<8} {amount:>9,}원  {share:5.1f}%  {bar}")
+        print("  " + pad(category, cat_w) + " " + pad(f"{amount:,}원", 11, "right")
+              + f"  {share:5.1f}%  {bar}")
 
     # 며칠에 걸쳐 썼는지 (기록이 있는 날의 수)
     days_used = len({r["date"] for r in target})
@@ -226,6 +281,29 @@ def cmd_stats(args):
     print(f"  기록 건수 {len(target)}건")
     print(f"  기록한 날 {days_used}일")
     print(f"  하루 평균 {round(total / days_used):,}원")
+
+
+def cmd_categories(args):
+    data = load_data()
+    records = data["records"]
+
+    if not records:
+        print("아직 기록이 없어서 카테고리도 없습니다.")
+        return
+
+    counts = {}
+    for r in records:
+        counts[r["category"]] = counts.get(r["category"], 0) + 1
+
+    ordered = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
+    cat_w = max([8] + [width(c) for c, _ in ordered])
+
+    print("지금까지 쓴 카테고리")
+    for category, count in ordered:
+        print("  " + pad(category, cat_w) + f" {count}건")
+    print()
+    print("※ 비슷한 이름이 따로 보이면(예: 식비/밥값) edit 로 통일해 두세요.")
+    print("  통일해야 stats 집계가 정확해집니다.")
 
 
 # ---------- 명령어 해석 ----------
@@ -270,6 +348,9 @@ def main():
     p_stats = sub.add_parser("stats", help="통계 요약")
     p_stats.add_argument("--month", help="YYYY-MM (생략하면 이번 달)")
     p_stats.set_defaults(func=cmd_stats)
+
+    p_cat = sub.add_parser("categories", help="쓰고 있는 카테고리 목록")
+    p_cat.set_defaults(func=cmd_categories)
 
     args = parser.parse_args()
     args.func(args)
