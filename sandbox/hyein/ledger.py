@@ -1,6 +1,6 @@
-"""가계부 CLI - 2단계: 실제로 파일에 저장하기
+"""가계부 CLI - 3단계: 삭제와 수정
 
-data.json 파일에 기록을 쌓고, list 로 다시 꺼내 봅니다.
+data.json 파일에 기록을 쌓고, 번호로 지목해서 지우거나 고칩니다.
 """
 
 import argparse
@@ -83,6 +83,71 @@ def cmd_list(args):
     print(f"{'합계':>4}  {len(records)}건{'':<8} {total:>9,}원")
 
 
+def find_record(records, target_id):
+    """번호로 기록 하나를 찾는다. 없으면 None."""
+    for r in records:
+        if r["id"] == target_id:
+            return r
+    return None
+
+
+def format_record(r):
+    """기록 하나를 한 줄 문자열로."""
+    memo = f" / {r['memo']}" if r["memo"] else ""
+    return f"{r['id']}번: {r['date']} / {r['amount']:,}원 / {r['category']}{memo}"
+
+
+def cmd_delete(args):
+    data = load_data()
+    record = find_record(data["records"], args.id)
+
+    if record is None:
+        print(f"{args.id}번 기록이 없습니다. list 로 번호를 확인해 보세요.")
+        return
+
+    # 지우기 전에 보여주고 확인받는다 (SPEC 5번: 가장 아픈 사고를 막는 절차)
+    print("아래 기록을 삭제합니다.")
+    print("  " + format_record(record))
+    answer = input("정말 지울까요? (y/n) ").strip().lower()
+
+    if answer != "y":
+        print("취소했습니다.")
+        return
+
+    data["records"].remove(record)
+    save_data(data)
+    print(f"{args.id}번을 삭제했습니다.")
+
+
+def cmd_edit(args):
+    data = load_data()
+    record = find_record(data["records"], args.id)
+
+    if record is None:
+        print(f"{args.id}번 기록이 없습니다. list 로 번호를 확인해 보세요.")
+        return
+
+    # 바꿀 항목을 하나도 안 줬다면 알려주고 끝낸다
+    changes = {
+        "amount": args.amount,
+        "category": args.category,
+        "date": args.date,
+        "memo": args.memo,
+    }
+    given = {k: v for k, v in changes.items() if v is not None}
+
+    if not given:
+        print("바꿀 내용을 하나 이상 지정해 주세요.")
+        print("  예) python3 ledger.py edit 3 --amount 9000")
+        return
+
+    print("변경 전: " + format_record(record))
+    for key, value in given.items():
+        record[key] = value
+    save_data(data)
+    print("변경 후: " + format_record(record))
+
+
 # ---------- 명령어 해석 ----------
 
 def main():
@@ -101,6 +166,18 @@ def main():
 
     p_list = sub.add_parser("list", help="전체 목록 보기")
     p_list.set_defaults(func=cmd_list)
+
+    p_del = sub.add_parser("delete", help="번호로 삭제")
+    p_del.add_argument("id", type=int, help="삭제할 기록 번호")
+    p_del.set_defaults(func=cmd_delete)
+
+    p_edit = sub.add_parser("edit", help="번호로 수정")
+    p_edit.add_argument("id", type=int, help="수정할 기록 번호")
+    p_edit.add_argument("--amount", type=int, help="새 금액")
+    p_edit.add_argument("--category", help="새 카테고리")
+    p_edit.add_argument("--date", help="새 날짜 YYYY-MM-DD")
+    p_edit.add_argument("--memo", help="새 메모")
+    p_edit.set_defaults(func=cmd_edit)
 
     args = parser.parse_args()
     args.func(args)
