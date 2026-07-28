@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-28T00:56:47.418Z",
+  "generatedAt": "2026-07-28T00:59:05.824Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
     "nocked115": {
       "name": "이수현",
       "role": "learner",
-      "commits": 0,
+      "commits": 1,
       "mergeCommits": 0,
       "prsOpened": 0,
       "prsMerged": 0,
@@ -17,8 +17,13 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-28T00:52:10Z",
-      "recentCommits": [],
+      "lastActivity": "2026-07-28T00:58:17Z",
+      "recentCommits": [
+        {
+          "message": "docs: 가계부 기록기 SPEC 작성",
+          "date": "2026-07-28T00:58:17Z"
+        }
+      ],
       "checklist": {
         "1": [
           2,
