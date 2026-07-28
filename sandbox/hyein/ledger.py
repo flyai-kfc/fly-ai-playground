@@ -1,4 +1,4 @@
-"""가계부 CLI - 3단계: 삭제와 수정
+"""가계부 CLI - 4단계: 검색과 필터
 
 data.json 파일에 기록을 쌓고, 번호로 지목해서 지우거나 고칩니다.
 """
@@ -61,12 +61,10 @@ def cmd_add(args):
         print(f"※ '{args.category}'는 처음 쓰는 카테고리입니다.")
 
 
-def cmd_list(args):
-    data = load_data()
-    records = data["records"]
-
+def print_table(records, empty_message="기록이 없습니다."):
+    """기록 목록을 표로 찍고 합계를 보여준다. list 와 search 가 같이 쓴다."""
     if not records:
-        print("아직 기록이 없습니다. add 로 추가해 보세요.")
+        print(empty_message)
         return
 
     # 최신 날짜가 위로 오도록 정렬 (날짜가 같으면 나중에 넣은 게 위로)
@@ -81,6 +79,46 @@ def cmd_list(args):
 
     total = sum(r["amount"] for r in records)
     print(f"{'합계':>4}  {len(records)}건{'':<8} {total:>9,}원")
+
+
+def cmd_list(args):
+    data = load_data()
+    print_table(data["records"], "아직 기록이 없습니다. add 로 추가해 보세요.")
+
+
+def cmd_search(args):
+    data = load_data()
+    records = data["records"]
+
+    # 조건을 하나씩 차례로 걸러낸다.
+    # 조건을 안 준 항목은 그냥 건너뛰므로, 여러 조건을 자유롭게 조합할 수 있다.
+    if args.category:
+        records = [r for r in records if r["category"] == args.category]
+
+    if args.keyword:
+        kw = args.keyword.lower()
+        records = [r for r in records if kw in r["memo"].lower()]
+
+    # 날짜는 YYYY-MM-DD 형식이라 문자열끼리 비교해도 순서가 맞다
+    if getattr(args, "from_date", None):
+        records = [r for r in records if r["date"] >= args.from_date]
+
+    if args.to:
+        records = [r for r in records if r["date"] <= args.to]
+
+    # 무슨 조건으로 찾았는지 다시 보여준다
+    conditions = []
+    if args.category:
+        conditions.append(f"카테고리={args.category}")
+    if args.keyword:
+        conditions.append(f"메모에 '{args.keyword}'")
+    if getattr(args, "from_date", None):
+        conditions.append(f"{args.from_date} 이후")
+    if args.to:
+        conditions.append(f"{args.to} 이전")
+    print("조건: " + (", ".join(conditions) if conditions else "없음 (전체)"))
+
+    print_table(records, "조건에 맞는 기록이 없습니다.")
 
 
 def find_record(records, target_id):
@@ -178,6 +216,14 @@ def main():
     p_edit.add_argument("--date", help="새 날짜 YYYY-MM-DD")
     p_edit.add_argument("--memo", help="새 메모")
     p_edit.set_defaults(func=cmd_edit)
+
+    p_search = sub.add_parser("search", help="검색·필터")
+    p_search.add_argument("--category", help="이 카테고리만")
+    p_search.add_argument("--keyword", help="메모에 이 단어가 들어간 것만")
+    p_search.add_argument("--from", dest="from_date",
+                          help="이 날짜부터 YYYY-MM-DD")
+    p_search.add_argument("--to", help="이 날짜까지 YYYY-MM-DD")
+    p_search.set_defaults(func=cmd_search)
 
     args = parser.parse_args()
     args.func(args)
