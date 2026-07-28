@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:31:34.531Z",
+  "generatedAt": "2026-07-28T01:32:51.050Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -143,7 +143,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:31:21Z",
+      "lastActivity": "2026-07-28T01:32:38Z",
       "recentCommits": [
         {
           "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
@@ -160,7 +160,7 @@
       ],
       "checklist": {
         "1": [
-          4,
+          5,
           5
         ],
         "2": [
@@ -178,7 +178,7 @@
         "만들 것을 에이전트와 인터뷰해서 `SPEC.md`로 정리했다": true,
         "내 브랜치를 만들고 첫 커밋을 push했다": true,
         "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": true,
-        "PR을 올렸고 머지됐다": false,
+        "PR을 올렸고 머지됐다": true,
         "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": false,
         "merge conflict를 직접 해결해봤다": false,
         "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": false,
