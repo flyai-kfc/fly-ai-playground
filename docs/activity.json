@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T04:33:31.836Z",
+  "generatedAt": "2026-07-28T05:01:18.459Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -197,8 +197,8 @@
     "GunderGie": {
       "name": "김동건",
       "role": "guide",
-      "commits": 5,
-      "mergeCommits": 1,
+      "commits": 8,
+      "mergeCommits": 2,
       "prsOpened": 0,
       "prsMerged": 0,
       "reviewsGiven": 0,
@@ -208,8 +208,20 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-27T16:18:57Z",
+      "lastActivity": "2026-07-28T05:01:03Z",
       "recentCommits": [
+        {
+          "message": "Merge branch 'main' of https://github.com/flyai-kfc/fly-ai-playground",
+          "date": "2026-07-28T05:01:03Z"
+        },
+        {
+          "message": "Merge branch 'main' of https://github.com/flyai-kfc/fly-ai-playground",
+          "date": "2026-07-28T05:00:45Z"
+        },
+        {
+          "message": "chore: evaluation 갱신 및 커밋 작성자 정보 추가",
+          "date": "2026-07-28T04:57:44Z"
+        },
         {
           "message": "fix: tools/checkup.py 디코딩 에러 해결 및 SETUP.md 수정",
           "date": "2026-07-27T16:18:57Z"
@@ -217,18 +229,6 @@
         {
           "message": "Merge branch 'main' of https://github.com/flyai-kfc/fly-ai-playground",
           "date": "2026-07-27T16:03:58Z"
-        },
-        {
-          "message": "fix: 가이드 문서 404 해결 및 문서 업데이트",
-          "date": "2026-07-27T16:02:56Z"
-        },
-        {
-          "message": "fix: 추적되지 않은 activity.json이 커밋되지 않던 문제 수정",
-          "date": "2026-07-27T15:25:18Z"
-        },
-        {
-          "message": "chore: 연습 레포 초기 셋업",
-          "date": "2026-07-27T15:03:12Z"
         }
       ],
       "checklist": {
