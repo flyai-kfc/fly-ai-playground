@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:32:51.050Z",
+  "generatedAt": "2026-07-28T01:33:32.159Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -67,14 +67,14 @@
       "mergeCommits": 0,
       "prsOpened": 1,
       "prsMerged": 1,
-      "reviewsGiven": 0,
-      "issueComments": 0,
+      "reviewsGiven": 1,
+      "issueComments": 1,
       "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:27:53Z",
+      "lastActivity": "2026-07-28T01:33:12Z",
       "recentCommits": [
         {
           "message": "feat: 한글 표 정렬, categories 명령, 날짜 검증 추가",
@@ -143,7 +143,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:32:38Z",
+      "lastActivity": "2026-07-28T01:33:12Z",
       "recentCommits": [
         {
           "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
