@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:00:16.517Z",
+  "generatedAt": "2026-07-28T01:01:40.443Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -17,7 +17,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-28T00:58:17Z",
+      "lastActivity": "2026-07-28T01:01:20Z",
       "recentCommits": [
         {
           "message": "docs: 가계부 기록기 SPEC 작성",
@@ -26,7 +26,7 @@
       ],
       "checklist": {
         "1": [
-          2,
+          3,
           5
         ],
         "2": [
@@ -42,7 +42,7 @@
       "checklistItems": {
         "레포를 클론하고 Claude로 열었다": true,
         "만들 것을 에이전트와 인터뷰해서 `SPEC.md`로 정리했다": true,
-        "내 브랜치를 만들고 첫 커밋을 push했다": false,
+        "내 브랜치를 만들고 첫 커밋을 push했다": true,
         "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": false,
         "PR을 올렸고 머지됐다": false,
         "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": false,
