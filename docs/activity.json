@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:50:51.782Z",
+  "generatedAt": "2026-07-28T01:53:57.823Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -10,14 +10,14 @@
       "mergeCommits": 0,
       "prsOpened": 1,
       "prsMerged": 1,
-      "reviewsGiven": 1,
-      "issueComments": 1,
+      "reviewsGiven": 2,
+      "issueComments": 2,
       "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": true,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:50:36Z",
+      "lastActivity": "2026-07-28T01:53:43Z",
       "recentCommits": [
         {
           "message": "feat: 가계부 CLI add/list/summary 명령 구현",
@@ -147,7 +147,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:33:12Z",
+      "lastActivity": "2026-07-28T01:53:43Z",
       "recentCommits": [
         {
           "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
