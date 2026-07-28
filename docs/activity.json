@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:47:13.076Z",
+  "generatedAt": "2026-07-28T01:48:01.276Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -17,7 +17,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:46:53Z",
+      "lastActivity": "2026-07-28T01:47:49Z",
       "recentCommits": [
         {
           "message": "Merge pull request #7 from flyai-kfc/main",
@@ -71,14 +71,14 @@
       "mergeCommits": 0,
       "prsOpened": 1,
       "prsMerged": 1,
-      "reviewsGiven": 1,
-      "issueComments": 1,
+      "reviewsGiven": 2,
+      "issueComments": 2,
       "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:33:12Z",
+      "lastActivity": "2026-07-28T01:47:49Z",
       "recentCommits": [
         {
           "message": "feat: 한글 표 정렬, categories 명령, 날짜 검증 추가",
