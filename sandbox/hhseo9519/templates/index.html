@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>관심 종목 스냅샷</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    table { border-collapse: collapse; margin-bottom: 2rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem 1rem; text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    .error { color: #c00; }
+    img { max-width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>관심 종목 스냅샷</h1>
+
+  {% if errors %}
+  <ul class="error">
+    {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  <table>
+    <tr><th>티커</th><th>현재가</th><th>전일종가</th><th>등락률(%)</th><th>거래량</th></tr>
+    {% for row in rows %}
+    <tr>
+      <td>{{ row.ticker }}</td>
+      <td>{{ "%.2f"|format(row.price) }}</td>
+      <td>{{ "%.2f"|format(row.prev_close) }}</td>
+      <td>{{ "%+.2f"|format(row.change_pct) }}</td>
+      <td>{{ "{:,}".format(row.volume) }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h2>최근 7일 가격 추이</h2>
+  <img src="{{ url_for('static', filename='chart.png') }}?v={{ range(0, 100000) | random }}" alt="최근 7일 가격 추이 그래프">
+</body>
+</html>
