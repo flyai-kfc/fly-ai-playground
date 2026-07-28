@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T00:34:59.786Z",
+  "generatedAt": "2026-07-28T00:43:33.932Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -38,7 +38,7 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 0,
+      "commits": 1,
       "mergeCommits": 0,
       "prsOpened": 0,
       "prsMerged": 0,
@@ -49,8 +49,13 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": null,
-      "recentCommits": [],
+      "lastActivity": "2026-07-28T00:30:35Z",
+      "recentCommits": [
+        {
+          "message": "docs: 가계부 CLI 스펙 작성",
+          "date": "2026-07-28T00:30:35Z"
+        }
+      ],
       "checklist": {
         "1": [
           0,
