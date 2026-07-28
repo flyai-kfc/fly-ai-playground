@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T01:49:03.412Z",
+  "generatedAt": "2026-07-28T01:50:51.782Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -10,14 +10,14 @@
       "mergeCommits": 0,
       "prsOpened": 1,
       "prsMerged": 1,
-      "reviewsGiven": 0,
-      "issueComments": 0,
+      "reviewsGiven": 1,
+      "issueComments": 1,
       "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": true,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:48:49Z",
+      "lastActivity": "2026-07-28T01:50:36Z",
       "recentCommits": [
         {
           "message": "feat: 가계부 CLI add/list/summary 명령 구현",
@@ -78,7 +78,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:48:42Z",
+      "lastActivity": "2026-07-28T01:50:36Z",
       "recentCommits": [
         {
           "message": "Merge pull request #8 from flyai-kfc/sandbox/nocked115-가계부",
