@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-28T01:33:32.159Z",
+  "generatedAt": "2026-07-28T01:35:41.809Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
     "nocked115": {
       "name": "이수현",
       "role": "learner",
-      "commits": 2,
+      "commits": 3,
       "mergeCommits": 0,
       "prsOpened": 0,
       "prsMerged": 0,
@@ -17,11 +17,15 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": "2026-07-28T01:31:20Z",
+      "lastActivity": "2026-07-28T01:34:44Z",
       "recentCommits": [
         {
           "message": "Merge pull request #7 from flyai-kfc/main",
           "date": "2026-07-28T01:31:20Z"
+        },
+        {
+          "message": "feat: 가계부 CLI add/list/summary 명령 구현",
+          "date": "2026-07-28T01:34:44Z"
         },
         {
           "message": "docs: 가계부 기록기 SPEC 작성",
