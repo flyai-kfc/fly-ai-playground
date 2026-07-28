@@ -1,103 +1,190 @@
 {
-  "generatedAt": "2026-07-27T23:52:37.092Z",
+  "generatedAt": "2026-07-28T01:28:19.030Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
     "nocked115": {
       "name": "이수현",
       "role": "learner",
-      "commits": 0,
+      "commits": 1,
       "mergeCommits": 0,
       "prsOpened": 0,
       "prsMerged": 0,
       "reviewsGiven": 0,
       "issueComments": 0,
-      "issuesOpened": 0,
+      "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 0,
-      "lastActivity": null,
-      "recentCommits": [],
+      "lastActivity": "2026-07-28T01:01:20Z",
+      "recentCommits": [
+        {
+          "message": "docs: 가계부 기록기 SPEC 작성",
+          "date": "2026-07-28T00:58:17Z"
+        }
+      ],
       "checklist": {
         "1": [
-          0,
-          0
+          3,
+          5
         ],
         "2": [
           0,
-          0
+          5
         ],
         "3": [
           0,
-          0
+          4
         ]
       },
-      "issueUrl": null
+      "issueUrl": "https://github.com/flyai-kfc/fly-ai-playground/issues/3",
+      "checklistItems": {
+        "레포를 클론하고 Claude로 열었다": true,
+        "만들 것을 에이전트와 인터뷰해서 `SPEC.md`로 정리했다": true,
+        "내 브랜치를 만들고 첫 커밋을 push했다": true,
+        "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": false,
+        "PR을 올렸고 머지됐다": false,
+        "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": false,
+        "merge conflict를 직접 해결해봤다": false,
+        "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": false,
+        "내 PR에 달린 리뷰를 반영해서 다시 push했다": false,
+        "설계 이견을 이슈나 PR 코멘트에 글로 정리해봤다": false,
+        "`CLAUDE.md`에 규칙을 한 줄 추가하고, 전/후 에이전트 행동 차이를 관찰했다": false,
+        "팀 공용 스킬을 하나 만들어 커밋했다": false,
+        "서브에이전트를 써보거나 테스트로 자가 검증 루프를 만들어봤다": false,
+        "회고를 작성했다": false
+      }
     },
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 0,
+      "commits": 7,
       "mergeCommits": 0,
-      "prsOpened": 0,
-      "prsMerged": 0,
+      "prsOpened": 1,
+      "prsMerged": 1,
       "reviewsGiven": 0,
       "issueComments": 0,
-      "issuesOpened": 0,
+      "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": false,
-      "prBodyQuality": 0,
-      "lastActivity": null,
-      "recentCommits": [],
+      "prBodyQuality": 2,
+      "lastActivity": "2026-07-28T01:27:53Z",
+      "recentCommits": [
+        {
+          "message": "feat: 한글 표 정렬, categories 명령, 날짜 검증 추가",
+          "date": "2026-07-28T01:11:31Z"
+        },
+        {
+          "message": "feat: 월별 통계 요약 추가",
+          "date": "2026-07-28T01:09:03Z"
+        },
+        {
+          "message": "feat: 카테고리·키워드·날짜 범위 검색 추가",
+          "date": "2026-07-28T01:03:39Z"
+        },
+        {
+          "message": "feat: 번호로 삭제/수정하는 기능 추가",
+          "date": "2026-07-28T00:59:59Z"
+        },
+        {
+          "message": "feat: JSON 파일 저장/불러오기 구현",
+          "date": "2026-07-28T00:56:30Z"
+        }
+      ],
       "checklist": {
         "1": [
-          0,
-          0
+          5,
+          5
         ],
         "2": [
           0,
-          0
+          5
         ],
         "3": [
           0,
-          0
+          4
         ]
       },
-      "issueUrl": null
+      "issueUrl": "https://github.com/flyai-kfc/fly-ai-playground/issues/5",
+      "checklistItems": {
+        "레포를 클론하고 Claude로 열었다": true,
+        "만들 것을 에이전트와 인터뷰해서 SPEC.md로 정리했다": true,
+        "내 브랜치를 만들고 첫 커밋을 push했다": true,
+        "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": true,
+        "PR을 올렸고 머지됐다": true,
+        "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": false,
+        "merge conflict를 직접 해결해봤다": false,
+        "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": false,
+        "내 PR에 달린 리뷰를 반영해서 다시 push했다": false,
+        "설계 이견을 이슈나 PR 코멘트에 글로 정리해봤다": false,
+        "`CLAUDE.md`에 규칙을 한 줄 추가하고, 전/후 에이전트 행동 차이를 관찰했다": false,
+        "팀 공용 스킬을 하나 만들어 커밋했다": false,
+        "서브에이전트를 써보거나 테스트로 자가 검증 루프를 만들어봤다": false,
+        "회고를 작성했다": false
+      }
     },
     "hhseo9519": {
       "name": "서현호",
       "role": "learner",
-      "commits": 0,
+      "commits": 3,
       "mergeCommits": 0,
-      "prsOpened": 0,
+      "prsOpened": 1,
       "prsMerged": 0,
-      "reviewsGiven": 0,
-      "issueComments": 0,
-      "issuesOpened": 0,
+      "reviewsGiven": 1,
+      "issueComments": 1,
+      "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": false,
-      "prBodyQuality": 0,
-      "lastActivity": null,
-      "recentCommits": [],
+      "prBodyQuality": 2,
+      "lastActivity": "2026-07-28T01:28:09Z",
+      "recentCommits": [
+        {
+          "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
+          "date": "2026-07-28T01:26:06Z"
+        },
+        {
+          "message": "feat: add watchlist snapshot CLI and web dashboard",
+          "date": "2026-07-28T01:15:24Z"
+        },
+        {
+          "message": "docs : add SPEC for 산출물 (watchlist snapshot tool)",
+          "date": "2026-07-28T00:33:30Z"
+        }
+      ],
       "checklist": {
         "1": [
-          0,
-          0
+          4,
+          5
         ],
         "2": [
           0,
-          0
+          5
         ],
         "3": [
           0,
-          0
+          4
         ]
       },
-      "issueUrl": null
+      "issueUrl": "https://github.com/flyai-kfc/fly-ai-playground/issues/2",
+      "checklistItems": {
+        "레포를 클론하고 Claude로 열었다": true,
+        "만들 것을 에이전트와 인터뷰해서 `SPEC.md`로 정리했다": true,
+        "내 브랜치를 만들고 첫 커밋을 push했다": true,
+        "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": true,
+        "PR을 올렸고 머지됐다": false,
+        "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": false,
+        "merge conflict를 직접 해결해봤다": false,
+        "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": false,
+        "내 PR에 달린 리뷰를 반영해서 다시 push했다": false,
+        "설계 이견을 이슈나 PR 코멘트에 글로 정리해봤다": false,
+        "`CLAUDE.md`에 규칙을 한 줄 추가하고, 전/후 에이전트 행동 차이를 관찰했다": false,
+        "팀 공용 스킬을 하나 만들어 커밋했다": false,
+        "서브에이전트를 써보거나 테스트로 자가 검증 루프를 만들어봤다": false,
+        "회고를 작성했다": false
+      }
     },
     "GunderGie": {
       "name": "김동건",
