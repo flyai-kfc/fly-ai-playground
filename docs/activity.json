@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T01:07:36.308Z",
+  "generatedAt": "2026-07-30T01:07:50.988Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -78,7 +78,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:07:22Z",
+      "lastActivity": "2026-07-30T01:07:44Z",
       "recentCommits": [
         {
           "message": "Merge pull request #10 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
@@ -107,7 +107,7 @@
           5
         ],
         "2": [
-          0,
+          5,
           5
         ],
         "3": [
@@ -122,11 +122,11 @@
         "내 브랜치를 만들고 첫 커밋을 push했다": true,
         "프로토타입이 실제로 동작하는 걸 직접 실행해서 확인했다": true,
         "PR을 올렸고 머지됐다": true,
-        "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": false,
-        "merge conflict를 직접 해결해봤다": false,
-        "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": false,
-        "내 PR에 달린 리뷰를 반영해서 다시 push했다": false,
-        "설계 이견을 이슈나 PR 코멘트에 글로 정리해봤다": false,
+        "소조 공동 프로토타입에서 내 몫을 브랜치로 올렸다": true,
+        "merge conflict를 직접 해결해봤다": true,
+        "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": true,
+        "내 PR에 달린 리뷰를 반영해서 다시 push했다": true,
+        "설계 이견을 이슈나 PR 코멘트에 글로 정리해봤다": true,
         "`CLAUDE.md`에 규칙을 한 줄 추가하고, 전/후 에이전트 행동 차이를 관찰했다": false,
         "팀 공용 스킬을 하나 만들어 커밋했다": false,
         "서브에이전트를 써보거나 테스트로 자가 검증 루프를 만들어봤다": false,
