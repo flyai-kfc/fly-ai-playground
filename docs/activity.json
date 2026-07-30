@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T00:24:46.871Z",
+  "generatedAt": "2026-07-30T00:25:55.430Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -138,7 +138,7 @@
       "role": "learner",
       "commits": 4,
       "mergeCommits": 0,
-      "prsOpened": 2,
+      "prsOpened": 3,
       "prsMerged": 1,
       "reviewsGiven": 1,
       "issueComments": 1,
@@ -147,7 +147,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:24:05Z",
+      "lastActivity": "2026-07-30T00:25:32Z",
       "recentCommits": [
         {
           "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
