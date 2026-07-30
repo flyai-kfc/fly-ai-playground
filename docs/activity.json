@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:28:22.600Z",
+  "generatedAt": "2026-07-30T00:54:21.358Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -67,10 +67,10 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 8,
+      "commits": 10,
       "mergeCommits": 0,
-      "prsOpened": 1,
-      "prsMerged": 1,
+      "prsOpened": 2,
+      "prsMerged": 2,
       "reviewsGiven": 4,
       "issueComments": 2,
       "issuesOpened": 1,
@@ -78,8 +78,16 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:50:36Z",
+      "lastActivity": "2026-07-30T00:53:48Z",
       "recentCommits": [
+        {
+          "message": "Merge pull request #10 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
+          "date": "2026-07-30T00:26:25Z"
+        },
+        {
+          "message": "feat: stats에 최다 지출 카테고리 표시",
+          "date": "2026-07-30T00:11:56Z"
+        },
         {
           "message": "Merge pull request #8 from flyai-kfc/sandbox/nocked115-가계부",
           "date": "2026-07-28T01:48:42Z"
@@ -91,14 +99,6 @@
         {
           "message": "feat: 월별 통계 요약 추가",
           "date": "2026-07-28T01:09:03Z"
-        },
-        {
-          "message": "feat: 카테고리·키워드·날짜 범위 검색 추가",
-          "date": "2026-07-28T01:03:39Z"
-        },
-        {
-          "message": "feat: 번호로 삭제/수정하는 기능 추가",
-          "date": "2026-07-28T00:59:59Z"
         }
       ],
       "checklist": {
@@ -136,10 +136,10 @@
     "hhseo9519": {
       "name": "서현호",
       "role": "learner",
-      "commits": 3,
+      "commits": 6,
       "mergeCommits": 0,
-      "prsOpened": 2,
-      "prsMerged": 1,
+      "prsOpened": 3,
+      "prsMerged": 2,
       "reviewsGiven": 1,
       "issueComments": 1,
       "issuesOpened": 1,
@@ -147,19 +147,27 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:53:43Z",
+      "lastActivity": "2026-07-30T00:53:48Z",
       "recentCommits": [
+        {
+          "message": "Merge pull request #9 from flyai-kfc/sandbox/hyein-day2",
+          "date": "2026-07-30T00:53:48Z"
+        },
+        {
+          "message": "refactor: ledger.py를 Store/Ledger/Display 클래스 구조로 재구성",
+          "date": "2026-07-30T00:24:05Z"
+        },
         {
           "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
           "date": "2026-07-28T01:26:06Z"
         },
         {
-          "message": "feat: add watchlist snapshot CLI and web dashboard",
-          "date": "2026-07-28T01:15:24Z"
+          "message": "충돌",
+          "date": "2026-07-30T00:52:42Z"
         },
         {
-          "message": "docs : add SPEC for 산출물 (watchlist snapshot tool)",
-          "date": "2026-07-28T00:33:30Z"
+          "message": "feat: add watchlist snapshot CLI and web dashboard",
+          "date": "2026-07-28T01:15:24Z"
         }
       ],
       "checklist": {
