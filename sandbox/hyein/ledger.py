@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
+"""터미널에서 쓰는 개인 가계부."""
 
 
 # --- 변경 이력 (Day 2 공동 작업) ---
 # 각자 자기 줄을 이 블록 맨 아래에 추가합니다.
 # 2026-07-29 hyein: stats 에 '가장 많이 쓴 카테고리' 한 줄 추가
+# 2026-07-30 hyein: count 명령 추가 (전체 지출 건수)
 
 import argparse
 import json
@@ -222,6 +223,11 @@ def cmd_list(args):
     Display.print_table(ledger.records, "아직 기록이 없습니다. add 로 추가해 보세요.")
 
 
+def cmd_count(args):
+    ledger = _new_ledger()
+    print(f"총 {len(ledger.records)}건")
+
+
 def cmd_search(args):
     ledger = _new_ledger()
     from_date = getattr(args, "from_date", None)
@@ -378,6 +384,9 @@ def main():
     p_list = sub.add_parser("list", help="전체 목록 보기")
     p_list.set_defaults(func=cmd_list)
 
+    p_count = sub.add_parser("count", help="지출 건수만 세기")
+    p_count.set_defaults(func=cmd_count)
+
     p_del = sub.add_parser("delete", help="번호로 삭제")
     p_del.add_argument("id", type=int, help="삭제할 기록 번호")
     p_del.set_defaults(func=cmd_delete)
@@ -407,3 +416,8 @@ def main():
 
     args = parser.parse_args()
     args.func(args)
+
+# 이 파일을 직접 실행했을 때만 main() 을 부른다.
+# (import 해서 쓸 때는 자동 실행되지 않게)
+if __name__ == "__main__":
+    main()
