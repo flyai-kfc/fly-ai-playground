@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T01:48:56.164Z",
+  "generatedAt": "2026-07-30T01:54:17.847Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -71,7 +71,7 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 15,
+      "commits": 16,
       "mergeCommits": 1,
       "prsOpened": 5,
       "prsMerged": 3,
@@ -82,7 +82,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:48:29Z",
+      "lastActivity": "2026-07-30T01:53:50Z",
       "recentCommits": [
         {
           "message": "fix: 충돌 해결 때 깨진 docstring 복구 및 count 명령 추가",
