@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T01:08:27.478Z",
+  "generatedAt": "2026-07-30T01:10:37.283Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -11,13 +11,13 @@
       "prsOpened": 1,
       "prsMerged": 1,
       "reviewsGiven": 2,
-      "issueComments": 2,
+      "issueComments": 3,
       "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": true,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:53:43Z",
+      "lastActivity": "2026-07-30T01:10:21Z",
       "recentCommits": [
         {
           "message": "feat: 가계부 CLI add/list/summary 명령 구현",
@@ -78,7 +78,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:08:04Z",
+      "lastActivity": "2026-07-30T01:10:21Z",
       "recentCommits": [
         {
           "message": "Merge pull request #11 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
