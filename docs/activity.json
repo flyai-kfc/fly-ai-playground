@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T01:44:50.636Z",
+  "generatedAt": "2026-07-30T01:48:37.840Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -77,12 +77,12 @@
       "prsMerged": 3,
       "reviewsGiven": 6,
       "issueComments": 4,
-      "issuesOpened": 2,
+      "issuesOpened": 3,
       "claudeMdCommits": 1,
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:44:33Z",
+      "lastActivity": "2026-07-30T01:48:29Z",
       "recentCommits": [
         {
           "message": "fix: 충돌 해결 때 깨진 docstring 복구 및 count 명령 추가",
@@ -115,7 +115,7 @@
           5
         ],
         "3": [
-          0,
+          4,
           4
         ]
       },
@@ -131,10 +131,10 @@
         "다른 사람 PR을 `/code-review`로 리뷰하고 코멘트를 남겼다": true,
         "내 PR에 달린 리뷰를 반영해서 다시 push했다": true,
         "설계 이견을 이슈나 PR 코멘트에 글로 정리해봤다": true,
-        "`CLAUDE.md`에 규칙을 한 줄 추가하고, 전/후 에이전트 행동 차이를 관찰했다": false,
-        "팀 공용 스킬을 하나 만들어 커밋했다": false,
-        "서브에이전트를 써보거나 테스트로 자가 검증 루프를 만들어봤다": false,
-        "회고를 작성했다": false
+        "`CLAUDE.md`에 규칙을 한 줄 추가하고, 전/후 에이전트 행동 차이를 관찰했다": true,
+        "팀 공용 스킬을 하나 만들어 커밋했다": true,
+        "서브에이전트를 써보거나 테스트로 자가 검증 루프를 만들어봤다": true,
+        "회고를 작성했다": true
       }
     },
     "hhseo9519": {
