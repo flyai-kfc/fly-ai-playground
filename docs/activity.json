@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T00:12:33.977Z",
+  "generatedAt": "2026-07-30T00:14:38.213Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -69,7 +69,7 @@
       "role": "learner",
       "commits": 9,
       "mergeCommits": 0,
-      "prsOpened": 1,
+      "prsOpened": 2,
       "prsMerged": 1,
       "reviewsGiven": 4,
       "issueComments": 2,
@@ -78,7 +78,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:11:56Z",
+      "lastActivity": "2026-07-30T00:14:23Z",
       "recentCommits": [
         {
           "message": "Merge pull request #8 from flyai-kfc/sandbox/nocked115-가계부",
