@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-30T01:33:00.443Z",
+  "generatedAt": "2026-07-30T01:35:19.688Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
     "nocked115": {
       "name": "이수현",
       "role": "learner",
-      "commits": 3,
+      "commits": 4,
       "mergeCommits": 0,
       "prsOpened": 1,
       "prsMerged": 1,
@@ -17,8 +17,12 @@
       "skillCommits": 0,
       "hasSpec": true,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:10:21Z",
+      "lastActivity": "2026-07-30T01:35:05Z",
       "recentCommits": [
+        {
+          "message": "Merge pull request #14 from flyai-kfc/sandbox/hyein-fix-ledger",
+          "date": "2026-07-30T01:35:05Z"
+        },
         {
           "message": "feat: 가계부 CLI add/list/summary 명령 구현",
           "date": "2026-07-28T01:34:44Z"
@@ -70,16 +74,24 @@
       "commits": 14,
       "mergeCommits": 1,
       "prsOpened": 4,
-      "prsMerged": 2,
+      "prsMerged": 3,
       "reviewsGiven": 6,
       "issueComments": 4,
       "issuesOpened": 2,
-      "claudeMdCommits": 0,
+      "claudeMdCommits": 1,
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:32:31Z",
+      "lastActivity": "2026-07-30T01:35:05Z",
       "recentCommits": [
+        {
+          "message": "fix: 충돌 해결 때 깨진 docstring 복구 및 count 명령 추가",
+          "date": "2026-07-30T01:32:24Z"
+        },
+        {
+          "message": "docs: 사용자 데이터 파일 보호 규칙 추가",
+          "date": "2026-07-30T01:15:28Z"
+        },
         {
           "message": "Merge pull request #11 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
           "date": "2026-07-30T01:08:04Z"
@@ -91,14 +103,6 @@
         {
           "message": "Merge pull request #10 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
           "date": "2026-07-30T00:26:25Z"
-        },
-        {
-          "message": "feat: stats에 최다 지출 카테고리 표시",
-          "date": "2026-07-30T00:11:56Z"
-        },
-        {
-          "message": "Merge pull request #8 from flyai-kfc/sandbox/nocked115-가계부",
-          "date": "2026-07-28T01:48:42Z"
         }
       ],
       "checklist": {
