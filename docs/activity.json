@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T00:53:31.161Z",
+  "generatedAt": "2026-07-30T00:54:03.466Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -70,7 +70,7 @@
       "commits": 10,
       "mergeCommits": 0,
       "prsOpened": 2,
-      "prsMerged": 1,
+      "prsMerged": 2,
       "reviewsGiven": 4,
       "issueComments": 2,
       "issuesOpened": 1,
@@ -78,11 +78,15 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:26:25Z",
+      "lastActivity": "2026-07-30T00:53:48Z",
       "recentCommits": [
         {
           "message": "Merge pull request #10 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
           "date": "2026-07-30T00:26:25Z"
+        },
+        {
+          "message": "feat: stats에 최다 지출 카테고리 표시",
+          "date": "2026-07-30T00:11:56Z"
         },
         {
           "message": "Merge pull request #8 from flyai-kfc/sandbox/nocked115-가계부",
@@ -95,10 +99,6 @@
         {
           "message": "feat: 월별 통계 요약 추가",
           "date": "2026-07-28T01:09:03Z"
-        },
-        {
-          "message": "feat: 카테고리·키워드·날짜 범위 검색 추가",
-          "date": "2026-07-28T01:03:39Z"
         }
       ],
       "checklist": {
@@ -136,7 +136,7 @@
     "hhseo9519": {
       "name": "서현호",
       "role": "learner",
-      "commits": 5,
+      "commits": 6,
       "mergeCommits": 0,
       "prsOpened": 3,
       "prsMerged": 2,
@@ -147,8 +147,12 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:52:42Z",
+      "lastActivity": "2026-07-30T00:53:48Z",
       "recentCommits": [
+        {
+          "message": "Merge pull request #9 from flyai-kfc/sandbox/hyein-day2",
+          "date": "2026-07-30T00:53:48Z"
+        },
         {
           "message": "refactor: ledger.py를 Store/Ledger/Display 클래스 구조로 재구성",
           "date": "2026-07-30T00:24:05Z"
@@ -164,10 +168,6 @@
         {
           "message": "feat: add watchlist snapshot CLI and web dashboard",
           "date": "2026-07-28T01:15:24Z"
-        },
-        {
-          "message": "docs : add SPEC for 산출물 (watchlist snapshot tool)",
-          "date": "2026-07-28T00:33:30Z"
         }
       ],
       "checklist": {
