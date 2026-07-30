@@ -2,6 +2,9 @@
 
 터미널에서 지출을 기록하고 찾아보고 합계를 내는 개인 가계부.
 기록은 이 파일 옆의 data.json 에 저장된다.
+
+Store(저장) / Ledger(기록 관리) / Display(출력) 세 클래스로 나누고,
+cmd_* 함수들은 이 클래스들을 조합해 화면에 찍기만 하는 얇은 진입점으로 둔다.
 """
 
 import argparse
@@ -15,29 +18,6 @@ from pathlib import Path
 # 이 .py 파일이 있는 폴더 안의 data.json 을 가리킨다.
 # 이렇게 해두면 어느 폴더에서 실행하든 항상 같은 파일을 쓴다.
 DATA_FILE = Path(__file__).parent / "data.json"
-
-
-# ---------- 출력 도우미 ----------
-
-def width(text):
-    """터미널에서 이 문자열이 차지하는 칸 수.
-
-    한글·한자는 영문의 두 배 폭으로 그려지는데 파이썬은 한 글자로 세기 때문에,
-    len() 을 그대로 쓰면 표가 삐뚤어진다.
-    """
-    total = 0
-    for ch in str(text):
-        # 'W'(Wide), 'F'(Fullwidth) 는 두 칸을 차지한다
-        total += 2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
-    return total
-
-
-def pad(text, n, align="left"):
-    """폭 n 칸에 맞춰 공백을 채운다. 한글이 섞여도 맞는다."""
-    text = str(text)
-    space = " " * max(0, n - width(text))
-    return space + text if align == "right" else text + space
-
 
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -53,110 +33,205 @@ def check_date(value):
     return value
 
 
-# ---------- 저장소 다루기 ----------
+class Store:
+    """data.json 파일 하나를 읽고 쓰는 역할만 담당한다."""
 
-def load_data():
-    """data.json 을 읽어서 파이썬 딕셔너리로 돌려준다.
+    def __init__(self, path):
+        self.path = path
 
-    파일이 아직 없으면(맨 처음 실행) 빈 상태를 만들어 준다.
-    """
-    if not DATA_FILE.exists():
-        return {"next_id": 1, "records": []}
+    def load(self):
+        if not self.path.exists():
+            return {"next_id": 1, "records": []}
+        with open(self.path, "r", encoding="utf-8") as f:
+            return json.load(f)
 
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+    def save(self, data):
+        with open(self.path, "w", encoding="utf-8") as f:
+            # ensure_ascii=False : 한글이 \uXXXX 로 깨지지 않게
+            # indent=2          : 사람이 눈으로 읽을 수 있게 줄 맞춰서
+            json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def save_data(data):
-    """딕셔너리를 data.json 에 써 넣는다."""
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        # ensure_ascii=False : 한글이 \uXXXX 로 깨지지 않게
-        # indent=2          : 사람이 눈으로 읽을 수 있게 줄 맞춰서
-        json.dump(data, f, ensure_ascii=False, indent=2)
+class Ledger:
+    """기록 목록에 대한 조회·추가·수정·삭제를 담당한다. 저장은 Store에 위임한다."""
+
+    def __init__(self, store):
+        self.store = store
+        self.data = store.load()
+
+    @property
+    def records(self):
+        return self.data["records"]
+
+    def save(self):
+        self.store.save(self.data)
+
+    def existing_categories(self):
+        return sorted({r["category"] for r in self.records})
+
+    def is_first_use(self, category):
+        used = [r["category"] for r in self.records]
+        return used.count(category) == 1
+
+    def add(self, amount, category, date_str=None, memo=None):
+        record = {
+            "id": self.data["next_id"],
+            "date": check_date(date_str) or date.today().isoformat(),
+            "amount": amount,
+            "category": category,
+            "memo": memo or "",
+        }
+        self.records.append(record)
+        self.data["next_id"] += 1
+        self.save()
+        return record
+
+    def find(self, target_id):
+        for r in self.records:
+            if r["id"] == target_id:
+                return r
+        return None
+
+    def delete(self, target_id):
+        record = self.find(target_id)
+        if record is None:
+            return None
+        self.records.remove(record)
+        self.save()
+        return record
+
+    def edit(self, target_id, **changes):
+        record = self.find(target_id)
+        if record is None:
+            return None, {}
+        given = {k: v for k, v in changes.items() if v is not None}
+        if not given:
+            return record, given
+        for key, value in given.items():
+            record[key] = value
+        self.save()
+        return record, given
+
+    def search(self, category=None, keyword=None, from_date=None, to_date=None):
+        records = self.records
+        if category:
+            records = [r for r in records if r["category"] == category]
+        if keyword:
+            kw = keyword.lower()
+            records = [r for r in records if kw in r["memo"].lower()]
+        # 날짜는 YYYY-MM-DD 형식이라 문자열끼리 비교해도 순서가 맞다
+        if from_date:
+            records = [r for r in records if r["date"] >= from_date]
+        if to_date:
+            records = [r for r in records if r["date"] <= to_date]
+        return records
+
+    def month_records(self, month):
+        # 날짜가 "2026-07-28" 이므로 앞 7글자가 "2026-07" 이다
+        return [r for r in self.records if r["date"].startswith(month)]
+
+    def category_counts(self):
+        counts = {}
+        for r in self.records:
+            counts[r["category"]] = counts.get(r["category"], 0) + 1
+        return counts
+
+
+class Display:
+    """터미널 출력(폭 계산, 정렬, 표 그리기)만 담당하는 헬퍼 모음."""
+
+    @staticmethod
+    def width(text):
+        """터미널에서 이 문자열이 차지하는 칸 수.
+
+        한글·한자는 영문의 두 배 폭으로 그려지는데 파이썬은 한 글자로 세기 때문에,
+        len() 을 그대로 쓰면 표가 삐뚤어진다.
+        """
+        total = 0
+        for ch in str(text):
+            # 'W'(Wide), 'F'(Fullwidth) 는 두 칸을 차지한다
+            total += 2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
+        return total
+
+    @classmethod
+    def pad(cls, text, n, align="left"):
+        """폭 n 칸에 맞춰 공백을 채운다. 한글이 섞여도 맞는다."""
+        text = str(text)
+        space = " " * max(0, n - cls.width(text))
+        return space + text if align == "right" else text + space
+
+    @staticmethod
+    def format_record(r):
+        """기록 하나를 한 줄 문자열로."""
+        memo = f" / {r['memo']}" if r["memo"] else ""
+        return f"{r['id']}번: {r['date']} / {r['amount']:,}원 / {r['category']}{memo}"
+
+    @classmethod
+    def print_table(cls, records, empty_message="기록이 없습니다."):
+        """기록 목록을 표로 찍고 합계를 보여준다. list 와 search 가 같이 쓴다."""
+        if not records:
+            print(empty_message)
+            return
+
+        # 최신 날짜가 위로 오도록 정렬 (날짜가 같으면 나중에 넣은 게 위로)
+        records = sorted(records, key=lambda r: (r["date"], r["id"]), reverse=True)
+
+        # 카테고리 열 폭은 가장 긴 카테고리에 맞춘다 (최소 8칸)
+        cat_w = max([8] + [cls.width(r["category"]) for r in records])
+
+        print(cls.pad("번호", 4, "right") + "  " + cls.pad("날짜", 11) + " "
+              + cls.pad("금액", 11, "right") + "  " + cls.pad("카테고리", cat_w) + "  메모")
+        print("-" * (4 + 2 + 11 + 1 + 11 + 2 + cat_w + 2 + 12))
+
+        for r in records:
+            print(cls.pad(r["id"], 4, "right") + "  " + cls.pad(r["date"], 11) + " "
+                  + cls.pad(f"{r['amount']:,}원", 11, "right") + "  "
+                  + cls.pad(r["category"], cat_w) + "  " + r["memo"])
+
+        print("-" * (4 + 2 + 11 + 1 + 11 + 2 + cat_w + 2 + 12))
+        total = sum(r["amount"] for r in records)
+        print(cls.pad("합계", 4, "right") + "  " + cls.pad(f"{len(records)}건", 11) + " "
+              + cls.pad(f"{total:,}원", 11, "right"))
+
+
+def _new_ledger():
+    return Ledger(Store(DATA_FILE))
 
 
 # ---------- 명령별 동작 ----------
 
 def cmd_add(args):
-    data = load_data()
+    ledger = _new_ledger()
 
     # 오타로 카테고리가 갈라지는 걸 줄이려고, 이미 쓰던 목록을 먼저 보여준다
-    existing = sorted({r["category"] for r in data["records"]})
+    existing = ledger.existing_categories()
     if existing:
         print("기존 카테고리: " + ", ".join(existing))
 
-    record = {
-        "id": data["next_id"],
-        "date": check_date(args.date) or date.today().isoformat(),
-        "amount": args.amount,
-        "category": args.category,
-        "memo": args.memo or "",
-    }
-
-    data["records"].append(record)
-    data["next_id"] += 1
-    save_data(data)
+    record = ledger.add(args.amount, args.category, args.date, args.memo)
 
     print(f"{record['id']}번으로 저장했습니다. "
           f"{record['date']} / {record['amount']:,}원 / {record['category']}")
 
     # 이 카테고리를 처음 쓰는 거라면 알려준다 (SPEC 6번)
-    used = [r["category"] for r in data["records"]]
-    if used.count(args.category) == 1:
+    if ledger.is_first_use(args.category):
         print(f"※ '{args.category}'는 처음 쓰는 카테고리입니다.")
 
 
-def print_table(records, empty_message="기록이 없습니다."):
-    """기록 목록을 표로 찍고 합계를 보여준다. list 와 search 가 같이 쓴다."""
-    if not records:
-        print(empty_message)
-        return
-
-    # 최신 날짜가 위로 오도록 정렬 (날짜가 같으면 나중에 넣은 게 위로)
-    records = sorted(records, key=lambda r: (r["date"], r["id"]), reverse=True)
-
-    # 카테고리 열 폭은 가장 긴 카테고리에 맞춘다 (최소 8칸)
-    cat_w = max([8] + [width(r["category"]) for r in records])
-
-    print(pad("번호", 4, "right") + "  " + pad("날짜", 11) + " "
-          + pad("금액", 11, "right") + "  " + pad("카테고리", cat_w) + "  메모")
-    print("-" * (4 + 2 + 11 + 1 + 11 + 2 + cat_w + 2 + 12))
-
-    for r in records:
-        print(pad(r["id"], 4, "right") + "  " + pad(r["date"], 11) + " "
-              + pad(f"{r['amount']:,}원", 11, "right") + "  "
-              + pad(r["category"], cat_w) + "  " + r["memo"])
-
-    print("-" * (4 + 2 + 11 + 1 + 11 + 2 + cat_w + 2 + 12))
-    total = sum(r["amount"] for r in records)
-    print(pad("합계", 4, "right") + "  " + pad(f"{len(records)}건", 11) + " "
-          + pad(f"{total:,}원", 11, "right"))
-
-
 def cmd_list(args):
-    data = load_data()
-    print_table(data["records"], "아직 기록이 없습니다. add 로 추가해 보세요.")
+    ledger = _new_ledger()
+    Display.print_table(ledger.records, "아직 기록이 없습니다. add 로 추가해 보세요.")
 
 
 def cmd_search(args):
-    data = load_data()
-    records = data["records"]
-
-    # 조건을 하나씩 차례로 걸러낸다.
-    # 조건을 안 준 항목은 그냥 건너뛰므로, 여러 조건을 자유롭게 조합할 수 있다.
-    if args.category:
-        records = [r for r in records if r["category"] == args.category]
-
-    if args.keyword:
-        kw = args.keyword.lower()
-        records = [r for r in records if kw in r["memo"].lower()]
-
-    # 날짜는 YYYY-MM-DD 형식이라 문자열끼리 비교해도 순서가 맞다
-    if getattr(args, "from_date", None):
-        records = [r for r in records if r["date"] >= args.from_date]
-
-    if args.to:
-        records = [r for r in records if r["date"] <= args.to]
+    ledger = _new_ledger()
+    from_date = getattr(args, "from_date", None)
+    records = ledger.search(
+        category=args.category,
+        keyword=args.keyword,
+        from_date=from_date,
+        to_date=args.to,
+    )
 
     # 무슨 조건으로 찾았는지 다시 보여준다
     conditions = []
@@ -164,32 +239,18 @@ def cmd_search(args):
         conditions.append(f"카테고리={args.category}")
     if args.keyword:
         conditions.append(f"메모에 '{args.keyword}'")
-    if getattr(args, "from_date", None):
-        conditions.append(f"{args.from_date} 이후")
+    if from_date:
+        conditions.append(f"{from_date} 이후")
     if args.to:
         conditions.append(f"{args.to} 이전")
     print("조건: " + (", ".join(conditions) if conditions else "없음 (전체)"))
 
-    print_table(records, "조건에 맞는 기록이 없습니다.")
-
-
-def find_record(records, target_id):
-    """번호로 기록 하나를 찾는다. 없으면 None."""
-    for r in records:
-        if r["id"] == target_id:
-            return r
-    return None
-
-
-def format_record(r):
-    """기록 하나를 한 줄 문자열로."""
-    memo = f" / {r['memo']}" if r["memo"] else ""
-    return f"{r['id']}번: {r['date']} / {r['amount']:,}원 / {r['category']}{memo}"
+    Display.print_table(records, "조건에 맞는 기록이 없습니다.")
 
 
 def cmd_delete(args):
-    data = load_data()
-    record = find_record(data["records"], args.id)
+    ledger = _new_ledger()
+    record = ledger.find(args.id)
 
     if record is None:
         print(f"{args.id}번 기록이 없습니다. list 로 번호를 확인해 보세요.")
@@ -197,27 +258,25 @@ def cmd_delete(args):
 
     # 지우기 전에 보여주고 확인받는다 (SPEC 5번: 가장 아픈 사고를 막는 절차)
     print("아래 기록을 삭제합니다.")
-    print("  " + format_record(record))
+    print("  " + Display.format_record(record))
     answer = input("정말 지울까요? (y/n) ").strip().lower()
 
     if answer != "y":
         print("취소했습니다.")
         return
 
-    data["records"].remove(record)
-    save_data(data)
+    ledger.delete(args.id)
     print(f"{args.id}번을 삭제했습니다.")
 
 
 def cmd_edit(args):
-    data = load_data()
-    record = find_record(data["records"], args.id)
+    ledger = _new_ledger()
+    record = ledger.find(args.id)
 
     if record is None:
         print(f"{args.id}번 기록이 없습니다. list 로 번호를 확인해 보세요.")
         return
 
-    # 바꿀 항목을 하나도 안 줬다면 알려주고 끝낸다
     changes = {
         "amount": args.amount,
         "category": args.category,
@@ -226,27 +285,23 @@ def cmd_edit(args):
     }
     given = {k: v for k, v in changes.items() if v is not None}
 
+    # 바꿀 항목을 하나도 안 줬다면 알려주고 끝낸다
     if not given:
         print("바꿀 내용을 하나 이상 지정해 주세요.")
         print("  예) python3 ledger.py edit 3 --amount 9000")
         return
 
-    print("변경 전: " + format_record(record))
-    for key, value in given.items():
-        record[key] = value
-    save_data(data)
-    print("변경 후: " + format_record(record))
+    print("변경 전: " + Display.format_record(record))
+    ledger.edit(args.id, **given)
+    print("변경 후: " + Display.format_record(record))
 
 
 def cmd_stats(args):
-    data = load_data()
-    records = data["records"]
+    ledger = _new_ledger()
 
     # 기준 달을 정한다. --month 를 안 주면 이번 달.
     month = args.month or date.today().strftime("%Y-%m")
-
-    # 날짜가 "2026-07-28" 이므로 앞 7글자가 "2026-07" 이다
-    target = [r for r in records if r["date"].startswith(month)]
+    target = ledger.month_records(month)
 
     print(f"[{month} 지출 요약]")
 
@@ -264,13 +319,13 @@ def cmd_stats(args):
     # 많이 쓴 카테고리가 위로 오게 정렬
     ordered = sorted(by_category.items(), key=lambda pair: pair[1], reverse=True)
 
-    cat_w = max([8] + [width(c) for c, _ in ordered])
+    cat_w = max([8] + [Display.width(c) for c, _ in ordered])
 
     print()
     for category, amount in ordered:
         share = amount / total * 100
         bar = "█" * round(share / 5)   # 5%당 한 칸
-        print("  " + pad(category, cat_w) + " " + pad(f"{amount:,}원", 11, "right")
+        print("  " + Display.pad(category, cat_w) + " " + Display.pad(f"{amount:,}원", 11, "right")
               + f"  {share:5.1f}%  {bar}")
 
     # 며칠에 걸쳐 썼는지 (기록이 있는 날의 수)
@@ -284,23 +339,19 @@ def cmd_stats(args):
 
 
 def cmd_categories(args):
-    data = load_data()
-    records = data["records"]
+    ledger = _new_ledger()
 
-    if not records:
+    if not ledger.records:
         print("아직 기록이 없어서 카테고리도 없습니다.")
         return
 
-    counts = {}
-    for r in records:
-        counts[r["category"]] = counts.get(r["category"], 0) + 1
-
+    counts = ledger.category_counts()
     ordered = sorted(counts.items(), key=lambda pair: pair[1], reverse=True)
-    cat_w = max([8] + [width(c) for c, _ in ordered])
+    cat_w = max([8] + [Display.width(c) for c, _ in ordered])
 
     print("지금까지 쓴 카테고리")
     for category, count in ordered:
-        print("  " + pad(category, cat_w) + f" {count}건")
+        print("  " + Display.pad(category, cat_w) + f" {count}건")
     print()
     print("※ 비슷한 이름이 따로 보이면(예: 식비/밥값) edit 로 통일해 두세요.")
     print("  통일해야 stats 집계가 정확해집니다.")
