@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T23:28:22.600Z",
+  "generatedAt": "2026-07-30T00:12:33.977Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -67,7 +67,7 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 8,
+      "commits": 9,
       "mergeCommits": 0,
       "prsOpened": 1,
       "prsMerged": 1,
@@ -78,7 +78,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:50:36Z",
+      "lastActivity": "2026-07-30T00:11:56Z",
       "recentCommits": [
         {
           "message": "Merge pull request #8 from flyai-kfc/sandbox/nocked115-가계부",
