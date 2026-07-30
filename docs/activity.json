@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T01:35:40.657Z",
+  "generatedAt": "2026-07-30T01:42:39.029Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -82,7 +82,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:35:05Z",
+      "lastActivity": "2026-07-30T01:42:25Z",
       "recentCommits": [
         {
           "message": "fix: 충돌 해결 때 깨진 docstring 복구 및 count 명령 추가",
