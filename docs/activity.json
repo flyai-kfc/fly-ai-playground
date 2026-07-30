@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T01:24:12.496Z",
+  "generatedAt": "2026-07-30T01:29:05.940Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -69,7 +69,7 @@
       "role": "learner",
       "commits": 13,
       "mergeCommits": 1,
-      "prsOpened": 3,
+      "prsOpened": 4,
       "prsMerged": 2,
       "reviewsGiven": 6,
       "issueComments": 4,
@@ -78,7 +78,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:23:58Z",
+      "lastActivity": "2026-07-30T01:28:46Z",
       "recentCommits": [
         {
           "message": "Merge pull request #11 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
