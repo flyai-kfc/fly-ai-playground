@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T00:54:21.358Z",
+  "generatedAt": "2026-07-30T00:59:27.784Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -67,8 +67,8 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 10,
-      "mergeCommits": 0,
+      "commits": 11,
+      "mergeCommits": 1,
       "prsOpened": 2,
       "prsMerged": 2,
       "reviewsGiven": 4,
@@ -78,7 +78,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:53:48Z",
+      "lastActivity": "2026-07-30T00:59:01Z",
       "recentCommits": [
         {
           "message": "Merge pull request #10 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
@@ -138,7 +138,7 @@
       "role": "learner",
       "commits": 6,
       "mergeCommits": 0,
-      "prsOpened": 3,
+      "prsOpened": 4,
       "prsMerged": 2,
       "reviewsGiven": 1,
       "issueComments": 1,
@@ -147,7 +147,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:53:48Z",
+      "lastActivity": "2026-07-30T00:59:02Z",
       "recentCommits": [
         {
           "message": "Merge pull request #9 from flyai-kfc/sandbox/hyein-day2",
