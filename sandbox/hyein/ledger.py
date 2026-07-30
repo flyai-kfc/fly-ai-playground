@@ -7,6 +7,10 @@ Store(저장) / Ledger(기록 관리) / Display(출력) 세 클래스로 나누�
 cmd_* 함수들은 이 클래스들을 조합해 화면에 찍기만 하는 얇은 진입점으로 둔다.
 """
 
+# --- 변경 이력 (Day 2 공동 작업) ---
+# 각자 자기 줄을 이 블록 맨 아래에 추가합니다.
+# 2026-07-29 hyein: stats 에 '가장 많이 쓴 카테고리' 한 줄 추가
+
 import argparse
 import json
 import re
@@ -336,6 +340,9 @@ def cmd_stats(args):
     print(f"  기록 건수 {len(target)}건")
     print(f"  기록한 날 {days_used}일")
     print(f"  하루 평균 {round(total / days_used):,}원")
+
+    top_category, top_amount = ordered[0]
+    print(f"  최다 지출 {top_category} ({top_amount:,}원)")
 
 
 def cmd_categories(args):
