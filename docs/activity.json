@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T00:14:38.213Z",
+  "generatedAt": "2026-07-30T00:24:46.871Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -136,7 +136,7 @@
     "hhseo9519": {
       "name": "서현호",
       "role": "learner",
-      "commits": 3,
+      "commits": 4,
       "mergeCommits": 0,
       "prsOpened": 2,
       "prsMerged": 1,
@@ -147,11 +147,15 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-28T01:53:43Z",
+      "lastActivity": "2026-07-30T00:24:05Z",
       "recentCommits": [
         {
           "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
           "date": "2026-07-28T01:26:06Z"
+        },
+        {
+          "message": "refactor: ledger.py를 Store/Ledger/Display 클래스 구조로 재구성",
+          "date": "2026-07-30T00:24:05Z"
         },
         {
           "message": "feat: add watchlist snapshot CLI and web dashboard",
