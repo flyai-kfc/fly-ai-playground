@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T00:25:55.430Z",
+  "generatedAt": "2026-07-30T00:26:36.883Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -67,7 +67,7 @@
     "hyeineom12": {
       "name": "엄혜인",
       "role": "learner",
-      "commits": 9,
+      "commits": 10,
       "mergeCommits": 0,
       "prsOpened": 2,
       "prsMerged": 1,
@@ -78,8 +78,12 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:14:23Z",
+      "lastActivity": "2026-07-30T00:26:25Z",
       "recentCommits": [
+        {
+          "message": "Merge pull request #10 from flyai-kfc/sandbox/hhseo9519-ledger-refactor",
+          "date": "2026-07-30T00:26:25Z"
+        },
         {
           "message": "Merge pull request #8 from flyai-kfc/sandbox/nocked115-가계부",
           "date": "2026-07-28T01:48:42Z"
@@ -95,10 +99,6 @@
         {
           "message": "feat: 카테고리·키워드·날짜 범위 검색 추가",
           "date": "2026-07-28T01:03:39Z"
-        },
-        {
-          "message": "feat: 번호로 삭제/수정하는 기능 추가",
-          "date": "2026-07-28T00:59:59Z"
         }
       ],
       "checklist": {
@@ -139,7 +139,7 @@
       "commits": 4,
       "mergeCommits": 0,
       "prsOpened": 3,
-      "prsMerged": 1,
+      "prsMerged": 2,
       "reviewsGiven": 1,
       "issueComments": 1,
       "issuesOpened": 1,
@@ -147,15 +147,15 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T00:25:32Z",
+      "lastActivity": "2026-07-30T00:26:25Z",
       "recentCommits": [
-        {
-          "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
-          "date": "2026-07-28T01:26:06Z"
-        },
         {
           "message": "refactor: ledger.py를 Store/Ledger/Display 클래스 구조로 재구성",
           "date": "2026-07-30T00:24:05Z"
+        },
+        {
+          "message": "Merge pull request #4 from flyai-kfc/sandbox/hyein-ledger",
+          "date": "2026-07-28T01:26:06Z"
         },
         {
           "message": "feat: add watchlist snapshot CLI and web dashboard",
