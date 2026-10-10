@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10T02:28:03.081Z",
+  "generatedAt": "2026-10-10T03:50:54.898Z",
   "repo": "flyai-kfc/fly-ai-playground",
   "startDate": "2026-07-28",
   "people": {
@@ -10,14 +10,14 @@
       "mergeCommits": 0,
       "prsOpened": 1,
       "prsMerged": 1,
-      "reviewsGiven": 2,
+      "reviewsGiven": 4,
       "issueComments": 3,
       "issuesOpened": 1,
       "claudeMdCommits": 0,
       "skillCommits": 0,
       "hasSpec": true,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:35:05Z",
+      "lastActivity": "2026-10-10T03:50:32Z",
       "recentCommits": [
         {
           "message": "Merge pull request #14 from flyai-kfc/sandbox/hyein-fix-ledger",
@@ -82,7 +82,7 @@
       "skillCommits": 0,
       "hasSpec": false,
       "prBodyQuality": 2,
-      "lastActivity": "2026-07-30T01:54:17Z",
+      "lastActivity": "2026-10-10T03:50:32Z",
       "recentCommits": [
         {
           "message": "fix: 충돌 해결 때 깨진 docstring 복구 및 count 명령 추가",
